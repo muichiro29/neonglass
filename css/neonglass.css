@@ -1,0 +1,4168 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEONGLASS — Liquid-glass theme for Pelican Panel  ·  v4.1.9
+   Based on Aether by Muichiro Dev (MIT)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('fonts/SpaceGrotesk-Variable.woff2') format('woff2');
+  font-weight: 300 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Orbitron';
+  src: url('fonts/Orbitron-Variable.woff2') format('woff2');
+  font-weight: 400 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('fonts/JetBrainsMono-Variable.woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+/* ─── Tokens ──────────────────────────────────────────────────────────────── */
+:root {
+  --ng-font-ui: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --ng-font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  --ng-radius-sm: 0.4rem;
+  --ng-radius: 0.6rem;
+  --ng-radius-lg: 0.75rem;
+
+  --ng-border-opacity: 0.1;
+
+  --ng-accent: 6 182 212;
+  --ng-accent-soft: 34 211 238;
+  --ng-accent-strong: 8 145 178;
+}
+
+[data-ng-hue="violet"] {
+  --ng-accent: 139 92 246;
+  --ng-accent-soft: 167 139 250;
+  --ng-accent-strong: 124 58 237;
+}
+[data-ng-hue="rose"] {
+  --ng-accent: 244 63 94;
+  --ng-accent-soft: 251 113 133;
+  --ng-accent-strong: 225 29 72;
+}
+[data-ng-hue="teal"] {
+  --ng-accent: 20 184 166;
+  --ng-accent-soft: 45 212 191;
+  --ng-accent-strong: 13 148 136;
+}
+[data-ng-hue="amber"] {
+  --ng-accent: 245 158 11;
+  --ng-accent-soft: 251 191 36;
+  --ng-accent-strong: 217 119 6;
+}
+[data-ng-hue="emerald"] {
+  --ng-accent: 16 185 129;
+  --ng-accent-soft: 52 211 153;
+  --ng-accent-strong: 5 150 105;
+}
+[data-ng-hue="indigo"] {
+  --ng-accent: 99 102 241;
+  --ng-accent-soft: 129 140 248;
+  --ng-accent-strong: 79 70 229;
+}
+[data-ng-hue="white"] {
+  --ng-accent: 245 245 247;
+  --ng-accent-soft: 255 255 255;
+  --ng-accent-strong: 212 212 216;
+}
+
+[data-ng-glass="low"]    { --ng-border-opacity: 0.06; }
+[data-ng-glass="medium"] { --ng-border-opacity: 0.1; }
+[data-ng-glass="high"]   { --ng-border-opacity: 0.15; }
+
+/* Dark — deep indigo navy (not pure black/zinc) so liquid glass can show */
+html.dark, html.dark body, [data-theme="dark"] {
+  --ng-bg: 8 10 28;
+  --ng-bg-elevated: 14 16 40;
+  --ng-surface: 18 20 48;
+  --ng-surface-2: 28 32 68;
+  --ng-surface-3: 40 46 90;
+  --ng-border: 70 80 140;
+  --ng-text: 240 242 255;
+  --ng-text-muted: 150 158 200;
+  --ng-text-subtle: 100 108 150;
+  --ng-shadow-lg: 0 12px 40px rgba(4, 6, 30, 0.55);
+}
+
+/* Light */
+html:not(.dark), [data-theme="light"] {
+  --ng-bg: 246 246 248;
+  --ng-bg-elevated: 255 255 255;
+  --ng-surface: 255 255 255;
+  --ng-surface-2: 242 242 245;
+  --ng-surface-3: 230 230 235;
+  --ng-border: 210 210 218;
+  --ng-text: 16 16 20;
+  --ng-text-muted: 95 95 105;
+  --ng-text-subtle: 135 135 145;
+  --ng-shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+html, body {
+  font-family: var(--ng-font-ui) !important;
+  background: rgb(var(--ng-bg)) !important;
+  color: rgb(var(--ng-text)) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fi-body, .fi-main, .fi-main-ctn {
+  background: transparent !important;
+}
+
+/* ─── Atmosphere ──────────────────────────────────────────────────────────── */
+/* <body> is transparent so the fixed #ng-bg layer (z-index -1) paints above
+   the <html> colour and below all the real content. */
+body { background: transparent !important; }
+.fi-layout { background: transparent !important; }
+
+#ng-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ng-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgb(var(--ng-border) / 0.55) 0.55px, transparent 0.7px);
+  background-size: 22px 22px;
+  opacity: 0.22;
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 0%, transparent 80%);
+          mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 0%, transparent 80%);
+}
+
+.ng-aurora {
+  position: absolute;
+  inset: 0;
+  opacity: 0.7;
+}
+.ng-aurora::before,
+.ng-aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+.ng-aurora::before {
+  width: 62vmax;
+  height: 62vmax;
+  left: -14%;
+  top: -34%;
+  background: radial-gradient(circle, rgb(var(--ng-accent) / 0.30), transparent 62%);
+  animation: ng-float-a 42s ease-in-out infinite alternate;
+}
+.ng-aurora::after {
+  width: 56vmax;
+  height: 56vmax;
+  right: -14%;
+  bottom: -38%;
+  background: radial-gradient(circle, rgb(var(--ng-accent-2) / 0.24), transparent 62%);
+  animation: ng-float-b 54s ease-in-out infinite alternate;
+}
+html:not(.dark) .ng-aurora { opacity: 0.45; }
+
+@keyframes ng-float-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(7vw, 5vh, 0) scale(1.14); }
+}
+@keyframes ng-float-b {
+  from { transform: translate3d(0, 0, 0) scale(1.08); }
+  to   { transform: translate3d(-6vw, -6vh, 0) scale(0.94); }
+}
+
+[data-ng-bg="grid"] .ng-aurora,
+[data-ng-bg="plain"] .ng-aurora { display: none; }
+[data-ng-bg="plain"] .ng-grid { display: none; }
+[data-ng-bg="aurora"] .ng-grid { opacity: 0.14; }
+
+/* Particles */
+.ng-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.35;
+}
+.ng-particles::before,
+.ng-particles::after {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  background-image:
+    radial-gradient(1px 1px at 18% 28%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 58% 68%, rgba(255,255,255,0.28), transparent),
+    radial-gradient(1.2px 1.2px at 82% 18%, rgba(255,255,255,0.32), transparent),
+    radial-gradient(1px 1px at 38% 82%, rgba(255,255,255,0.22), transparent),
+    radial-gradient(1px 1px at 72% 42%, rgba(255,255,255,0.26), transparent);
+  animation: ng-drift 110s linear infinite;
+}
+.ng-particles::after {
+  animation-duration: 150s;
+  animation-direction: reverse;
+  opacity: 0.45;
+}
+html:not(.dark) .ng-particles { filter: invert(1); opacity: 0.18; }
+@keyframes ng-drift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-48px); }
+}
+[data-ng-particles="off"] .ng-particles { display: none !important; }
+[data-ng-particles="low"] .ng-particles { opacity: 0.22; }
+[data-ng-reduce="1"] .ng-particles::before,
+[data-ng-reduce="1"] .ng-particles::after,
+[data-ng-reduce="1"] .ng-aurora::before,
+[data-ng-reduce="1"] .ng-aurora::after { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .ng-particles::before, .ng-particles::after,
+  .ng-aurora::before, .ng-aurora::after { animation: none !important; }
+}
+
+/* ─── Typography ──────────────────────────────────────────────────────────── */
+.fi-header-heading,
+.fi-page-header-heading,
+.fi-section-header-heading,
+.fi-modal-heading,
+h1, h2, h3 {
+  font-family: var(--ng-font-ui) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.03em !important;
+  color: rgb(var(--ng-text)) !important;
+}
+/* Brand: logo + hosting name side by side */
+.fi-logo {
+  font-family: var(--ng-font-ui) !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.025em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  max-width: 100% !important;
+  line-height: 1.2 !important;
+  color: rgb(var(--ng-text)) !important;
+  text-decoration: none !important;
+  min-width: 0 !important;
+}
+.fi-logo img,
+.fi-logo svg,
+.fi-logo picture,
+.fi-sidebar-header img,
+.fi-sidebar-header .fi-logo img,
+.fi-topbar .fi-logo img,
+.fi-brand-logo {
+  display: block !important;
+  width: auto !important;
+  height: 1.9rem !important;
+  max-height: 2.1rem !important;
+  max-width: 2.4rem !important;
+  object-fit: contain !important;
+  border-radius: 0.4rem !important;
+  flex-shrink: 0 !important;
+}
+.fi-logo span,
+.fi-logo .fi-logo-text {
+  font-size: 0.95rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.03em !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+code, pre, .fi-ta-text-item-label, .xterm, .xterm * {
+  font-family: var(--ng-font-mono) !important;
+}
+
+/* ─── Layout (panel-wide professional density) ────────────────────────────── */
+.fi-main {
+  padding: 1rem 1.15rem 1.85rem !important;
+}
+@media (min-width: 1024px) {
+  .fi-main { padding: 1.2rem 1.55rem 2.1rem !important; }
+}
+.fi-page-header {
+  margin-bottom: 1rem !important;
+  padding-bottom: 0.85rem !important;
+  border-bottom: 1px solid rgb(var(--ng-border) / calc(var(--ng-border-opacity) * 0.7)) !important;
+}
+.fi-page-header-heading {
+  font-size: 1.32rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.04em !important;
+}
+.fi-page-header-subheading {
+  color: rgb(var(--ng-text-muted)) !important;
+  font-size: 0.82rem !important;
+  margin-top: 0.15rem !important;
+}
+.fi-page-content { gap: 0.95rem !important; }
+
+/* ─── Sidebar ─────────────────────────────────────────────────────────────── */
+.fi-sidebar {
+  background: rgb(var(--ng-bg-elevated)) !important;
+  border-right: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity)) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.fi-sidebar-header {
+  border-bottom: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity)) !important;
+  padding: 0.9rem 1rem !important;
+  min-height: 3.55rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+.fi-sidebar-header a,
+.fi-sidebar-header .fi-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+.fi-sidebar-nav {
+  padding: 0.45rem 0.35rem !important;
+  gap: 0.08rem !important;
+}
+.fi-sidebar-group-label {
+  font-size: 0.6rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.09em !important;
+  text-transform: uppercase !important;
+  color: rgb(var(--ng-text-subtle)) !important;
+  padding: 0.75rem 0.65rem 0.28rem !important;
+}
+.fi-sidebar-nav-item,
+.fi-sidebar-item-button {
+  border-radius: var(--ng-radius-sm) !important;
+  margin-inline: 0.2rem;
+  padding: 0.4rem 0.62rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 450 !important;
+  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease !important;
+}
+.fi-sidebar-nav-item:hover,
+.fi-sidebar-item-button:hover {
+  background: rgb(var(--ng-surface-2) / 0.95) !important;
+}
+.fi-sidebar-nav-item-active,
+.fi-sidebar-item-active,
+.fi-sidebar-nav-item[aria-current="page"] {
+  background: rgb(var(--ng-accent) / 0.1) !important;
+  color: rgb(var(--ng-accent-soft)) !important;
+  box-shadow: inset 2px 0 0 0 rgb(var(--ng-accent));
+  font-weight: 550 !important;
+}
+
+/* ─── Topbar ──────────────────────────────────────────────────────────────── */
+.fi-topbar {
+  height: 3.35rem !important;
+  background: rgb(var(--ng-surface)) !important;
+  border-bottom: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity)) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding-inline: 1rem !important;
+}
+.fi-topbar .fi-logo,
+.fi-topbar-start .fi-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.55rem !important;
+}
+.fi-topbar .fi-logo img {
+  height: 1.65rem !important;
+  max-height: 1.75rem !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+
+/* ─── Cards & sections ────────────────────────────────────────────────────── */
+.fi-section,
+.fi-ta-ctn,
+.fi-modal-window,
+.fi-dropdown-panel,
+.fi-simple-card {
+  background: rgb(var(--ng-surface)) !important;
+  border: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity)) !important;
+  border-radius: var(--ng-radius) !important;
+  box-shadow: none !important;
+}
+
+.fi-modal-window,
+.fi-dropdown-panel {
+  background: rgb(var(--ng-bg-elevated)) !important;
+  border-radius: var(--ng-radius-lg) !important;
+  box-shadow: var(--ng-shadow-lg) !important;
+  border-color: rgb(var(--ng-border) / 0.15) !important;
+}
+/* Dropdowns must stay readable — later liquid-glass layer reinforces opacity */
+
+.fi-section,
+.fi-simple-card {
+  overflow: hidden !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.fi-section:hover,
+.fi-simple-card:hover {
+  border-color: rgb(var(--ng-accent) / 0.22) !important;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.08) !important;
+}
+html.dark .fi-section:hover,
+html.dark .fi-simple-card:hover {
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.28) !important;
+}
+.fi-section-header {
+  padding: 0.85rem 1.1rem !important;
+  border-bottom: 1px solid rgb(var(--ng-border) / calc(var(--ng-border-opacity) * 0.85)) !important;
+  background: rgb(var(--ng-bg) / 0.4) !important;
+}
+.fi-section-header-heading {
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+}
+.fi-section-content,
+.fi-section-content-ctn {
+  padding: 1rem 1.1rem !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.fi-section .fi-section-content-ctn,
+.fi-section .fi-ta-ctn {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+.fi-section .fi-section {
+  box-shadow: none !important;
+  border-color: rgb(var(--ng-border) / calc(var(--ng-border-opacity) * 0.7)) !important;
+}
+
+/* ─── Stat tiles ──────────────────────────────────────────────────────────── */
+.fi-wi-stats-overview-stats-ctn,
+.fi-wi-stats-overview {
+  gap: 0.85rem !important;
+}
+
+.fi-wi-stats-overview-stat {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.3rem !important;
+  padding: 1.15rem 1.25rem 1.15rem 1.35rem !important;
+  background: rgb(var(--ng-surface)) !important;
+  border: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity)) !important;
+  border-radius: var(--ng-radius) !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease !important;
+}
+
+/* Left accent bar */
+.fi-wi-stats-overview-stat::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0.7rem !important;
+  bottom: 0.7rem !important;
+  width: 2.5px !important;
+  border-radius: 0 2px 2px 0 !important;
+  background: rgb(var(--ng-accent)) !important;
+  opacity: 0.6 !important;
+  transition: opacity 0.15s ease !important;
+}
+
+.fi-wi-stats-overview-stat:hover {
+  border-color: rgb(var(--ng-accent) / 0.3) !important;
+  background: rgb(var(--ng-surface-2)) !important;
+  transform: translateY(-1px) !important;
+}
+.fi-wi-stats-overview-stat:hover::after {
+  opacity: 1 !important;
+}
+
+.fi-wi-stats-overview-stat-value,
+.fi-wi-stats-overview-stat .text-3xl,
+.fi-wi-stats-overview-stat [class*="text-2xl"],
+.fi-wi-stats-overview-stat [class*="text-3xl"] {
+  font-family: var(--ng-font-mono) !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.15 !important;
+  color: rgb(var(--ng-text)) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.fi-wi-stats-overview-stat-label,
+.fi-wi-stats-overview-stat .text-sm {
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  margin-top: 0.1rem !important;
+}
+
+.fi-wi-stats-overview-stat-description {
+  font-size: 0.78rem !important;
+  color: rgb(var(--ng-text-subtle)) !important;
+  margin-top: 0.2rem !important;
+}
+
+.fi-wi-stats-overview-stat-icon,
+.fi-wi-stats-overview-stat .fi-icon {
+  width: 2rem !important;
+  height: 2rem !important;
+  border-radius: var(--ng-radius-sm) !important;
+  background: rgb(var(--ng-accent) / 0.1) !important;
+  color: rgb(var(--ng-accent-soft)) !important;
+  border: 1px solid rgb(var(--ng-accent) / 0.18) !important;
+}
+
+/* ─── Tables ──────────────────────────────────────────────────────────────── */
+.fi-ta-ctn { overflow: hidden !important; }
+.fi-ta-header {
+  background: rgb(var(--ng-bg) / 0.55) !important;
+  border-bottom: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity)) !important;
+}
+.fi-ta-header-cell {
+  padding: 0.65rem 0.95rem !important;
+  font-size: 0.65rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.07em !important;
+  text-transform: uppercase !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  background: transparent !important;
+}
+.fi-ta-row {
+  border-bottom: 1px solid rgb(var(--ng-border) / calc(var(--ng-border-opacity) * 0.6)) !important;
+  transition: background 0.1s ease !important;
+}
+.fi-ta-row:last-child { border-bottom: none !important; }
+.fi-ta-row:hover { background: rgb(var(--ng-accent) / 0.035) !important; }
+.fi-ta-cell {
+  padding: 0.75rem 0.95rem !important;
+  font-size: 0.84rem !important;
+}
+.fi-ta-filters,
+.fi-ta-header-toolbar {
+  padding: 0.65rem 0.95rem !important;
+  gap: 0.6rem !important;
+  border-bottom: 1px solid rgb(var(--ng-border) / calc(var(--ng-border-opacity) * 0.7)) !important;
+  background: rgb(var(--ng-bg) / 0.35) !important;
+}
+
+/* ─── Badges ──────────────────────────────────────────────────────────────── */
+.fi-badge {
+  border-radius: 9999px !important;
+  font-weight: 550 !important;
+  font-size: 0.65rem !important;
+  letter-spacing: 0.04em !important;
+  padding: 0.18rem 0.55rem !important;
+  text-transform: uppercase !important;
+  border: 1px solid transparent !important;
+}
+.fi-badge-success, .fi-badge[class*="success"] {
+  background: rgba(16, 185, 129, 0.1) !important;
+  color: rgb(52, 211, 153) !important;
+  border-color: rgba(16, 185, 129, 0.22) !important;
+}
+.fi-badge-danger, .fi-badge[class*="danger"] {
+  background: rgba(244, 63, 94, 0.1) !important;
+  color: rgb(251, 113, 133) !important;
+  border-color: rgba(244, 63, 94, 0.22) !important;
+}
+.fi-badge-warning, .fi-badge[class*="warning"] {
+  background: rgba(245, 158, 11, 0.1) !important;
+  color: rgb(251, 191, 36) !important;
+  border-color: rgba(245, 158, 11, 0.22) !important;
+}
+.fi-badge-info, .fi-badge[class*="info"],
+.fi-badge-primary, .fi-badge[class*="primary"] {
+  background: rgb(var(--ng-accent) / 0.1) !important;
+  color: rgb(var(--ng-accent-soft)) !important;
+  border-color: rgb(var(--ng-accent) / 0.22) !important;
+}
+.fi-badge-gray, .fi-badge[class*="gray"] {
+  background: rgb(var(--ng-surface-2) / 0.9) !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  border-color: rgb(var(--ng-border) / 0.35) !important;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────────── */
+.fi-btn {
+  border-radius: var(--ng-radius-sm) !important;
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: -0.01em;
+  padding-block: 0.4rem !important;
+  padding-inline: 0.8rem !important;
+  transition: background 0.12s ease, border-color 0.12s ease, filter 0.12s ease, transform 0.12s ease !important;
+}
+.fi-btn-primary,
+.fi-btn[class*="primary"] {
+  background: rgb(var(--ng-accent)) !important;
+  color: rgb(var(--ng-on-accent)) !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+}
+.fi-btn-primary:hover,
+.fi-btn[class*="primary"]:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.fi-btn-gray,
+.fi-btn[class*="gray"] {
+  background: transparent !important;
+  border: 1px solid rgb(var(--ng-border) / 0.55) !important;
+  color: rgb(var(--ng-text)) !important;
+}
+.fi-btn-gray:hover,
+.fi-btn[class*="gray"]:hover {
+  background: rgb(var(--ng-surface-2) / 0.8) !important;
+  border-color: rgb(var(--ng-border) / 0.85) !important;
+}
+.fi-btn[wire\\:click*="power"],
+button[data-action="start"],
+button[data-action="restart"],
+button[data-action="stop"] {
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.68rem !important;
+  padding-inline: 0.9rem !important;
+}
+
+/* ─── Inputs ──────────────────────────────────────────────────────────────── */
+.fi-input-wrp,
+.fi-select-input,
+.fi-ta-search-field,
+.fi-fo-field-wrp input,
+.fi-fo-field-wrp select,
+.fi-fo-field-wrp textarea {
+  border-radius: var(--ng-radius-sm) !important;
+  background: rgb(var(--ng-bg)) !important;
+  border: 1px solid rgb(var(--ng-border) / 0.5) !important;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease !important;
+  min-height: 2.15rem !important;
+}
+.fi-input-wrp:focus-within,
+.fi-select-input:focus-within,
+.fi-fo-field-wrp input:focus,
+.fi-fo-field-wrp select:focus,
+.fi-fo-field-wrp textarea:focus {
+  border-color: rgb(var(--ng-accent)) !important;
+  box-shadow: 0 0 0 2px rgb(var(--ng-accent) / 0.15) !important;
+  outline: none !important;
+}
+
+/* ─── Tabs ────────────────────────────────────────────────────────────────── */
+.fi-tabs, .fi-fo-tabs {
+  border-bottom: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity)) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  gap: 0 !important;
+  padding: 0 !important;
+}
+.fi-tabs-item, .fi-fo-tabs-item {
+  border-radius: 0 !important;
+  font-weight: 500 !important;
+  font-size: 0.82rem !important;
+  padding: 0.55rem 0.95rem !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -1px !important;
+}
+.fi-tabs-item:hover, .fi-fo-tabs-item:hover {
+  color: rgb(var(--ng-text)) !important;
+  background: transparent !important;
+}
+.fi-tabs-item-active, .fi-fo-tabs-item-active,
+.fi-tabs-item[aria-selected="true"] {
+  color: rgb(var(--ng-text)) !important;
+  background: transparent !important;
+  border-bottom-color: rgb(var(--ng-accent)) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+/* ─── Auth (login / register — more professional) ─────────────────────────── */
+body[data-ng-auth="1"] .fi-simple-main,
+body[data-ng-auth] .fi-simple-main {
+  background: transparent !important;
+}
+body[data-ng-auth="1"] .fi-simple-card,
+body[data-ng-auth] .fi-simple-card {
+  position: relative !important;
+  background: rgb(var(--ng-surface)) !important;
+  border: 1px solid rgb(var(--ng-border) / 0.14) !important;
+  border-radius: calc(var(--ng-radius-lg) + 0.15rem) !important;
+  box-shadow: var(--ng-shadow-lg), 0 0 0 1px rgb(var(--ng-accent) / 0.04) !important;
+  padding: 2rem 1.85rem !important;
+  overflow: hidden !important;
+}
+body[data-ng-auth="1"] .fi-simple-card::before,
+body[data-ng-auth] .fi-simple-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, rgb(var(--ng-accent)), rgb(var(--ng-accent-soft)), transparent) !important;
+  pointer-events: none !important;
+}
+body[data-ng-auth="1"] .fi-logo,
+body[data-ng-auth] .fi-logo {
+  justify-content: center !important;
+  margin-bottom: 0.35rem !important;
+}
+body[data-ng-auth="1"] .fi-logo img,
+body[data-ng-auth] .fi-logo img {
+  height: 2.35rem !important;
+  max-height: 2.5rem !important;
+  max-width: 3rem !important;
+}
+body[data-ng-auth="1"] .fi-simple-header-heading,
+body[data-ng-auth] .fi-simple-header-heading {
+  font-size: 1.2rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.03em !important;
+  text-align: center !important;
+}
+
+/* ─── Console ─────────────────────────────────────────────────────────────── */
+#terminal, .xterm, .xterm-viewport {
+  border-radius: var(--ng-radius) !important;
+  font-family: var(--ng-font-mono) !important;
+  overflow: hidden;
+}
+#terminal {
+  border: 1px solid rgb(var(--ng-border) / 0.18) !important;
+  background: #09090b !important;
+}
+[data-ng-console-glow="1"] #terminal {
+  border-color: rgb(var(--ng-accent) / 0.28) !important;
+  box-shadow: 0 0 0 1px rgb(var(--ng-accent) / 0.08), 0 0 24px rgb(var(--ng-accent) / 0.06);
+}
+
+/* ─── Modals ──────────────────────────────────────────────────────────────── */
+.fi-modal-header {
+  padding: 1rem 1.2rem !important;
+  border-bottom: 1px solid rgb(var(--ng-border) / 0.12) !important;
+}
+.fi-modal-heading {
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+}
+.fi-modal-content { padding: 1.1rem 1.2rem !important; }
+.fi-modal-footer {
+  padding: 0.85rem 1.2rem !important;
+  border-top: 1px solid rgb(var(--ng-border) / 0.12) !important;
+  gap: 0.45rem !important;
+}
+
+/* ─── Notifications ───────────────────────────────────────────────────────── */
+.fi-no-notification {
+  border-radius: var(--ng-radius) !important;
+  background: rgb(var(--ng-bg-elevated)) !important;
+  border: 1px solid rgb(var(--ng-border) / 0.14) !important;
+  box-shadow: var(--ng-shadow-lg) !important;
+  padding: 0.8rem 1rem !important;
+  font-size: 0.84rem !important;
+}
+
+/* ─── Theme toggle ────────────────────────────────────────────────────────── */
+#ng-theme-toggle {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 9999;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid rgb(var(--ng-border) / 0.2);
+  background: rgb(var(--ng-surface));
+  color: rgb(var(--ng-text));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  padding: 0;
+  outline: none;
+}
+#ng-theme-toggle:hover {
+  background: rgb(var(--ng-surface-2));
+  border-color: rgb(var(--ng-accent) / 0.4);
+  color: rgb(var(--ng-accent-soft));
+  transform: translateY(-2px);
+}
+#ng-theme-toggle:active { transform: translateY(0); }
+#ng-theme-toggle:focus-visible {
+  outline: 2px solid rgb(var(--ng-accent));
+  outline-offset: 2px;
+}
+#ng-theme-toggle .ng-icon-sun,
+#ng-theme-toggle .ng-icon-moon {
+  position: absolute;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+html.dark #ng-theme-toggle .ng-icon-sun {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+html.dark #ng-theme-toggle .ng-icon-moon {
+  opacity: 0;
+  transform: scale(0.5) rotate(-45deg);
+}
+html:not(.dark) #ng-theme-toggle .ng-icon-sun {
+  opacity: 0;
+  transform: scale(0.5) rotate(45deg);
+}
+html:not(.dark) #ng-theme-toggle .ng-icon-moon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+@media (max-width: 640px) {
+  #ng-theme-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* ─── Scrollbars ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--ng-border) / 0.5);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--ng-accent) / 0.45);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--ng-border) / 0.5) transparent;
+}
+
+/* ─── Focus & selection ───────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid rgb(var(--ng-accent)) !important;
+  outline-offset: 2px;
+}
+::selection {
+  background: rgb(var(--ng-accent) / 0.22);
+  color: rgb(var(--ng-text));
+}
+
+/* ─── Links ───────────────────────────────────────────────────────────────── */
+a.fi-link, .fi-ta-text-item a {
+  color: rgb(var(--ng-accent-soft)) !important;
+  text-decoration: none !important;
+}
+a.fi-link:hover, .fi-ta-text-item a:hover {
+  color: rgb(var(--ng-accent)) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px !important;
+}
+
+/* ─── Breadcrumbs ─────────────────────────────────────────────────────────── */
+.fi-breadcrumbs {
+  font-size: 0.78rem !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  margin-bottom: 0.4rem !important;
+}
+
+/* ─── Dashboard (server list) — "Nebula" ──────────────────────────────────── */
+/* Everything here is scoped to html[data-ng-page="server-list"], which the
+   JS only sets on the server-list route. If a selector does not match, nothing
+   happens: the default Pelican layout simply stays in place. */
+
+html[data-ng-page="server-list"] .fi-main { padding: 1.1rem 1.1rem 2rem !important; }
+@media (min-width: 1024px) {
+  html[data-ng-page="server-list"] .fi-main { padding: 1.4rem 1.75rem 2.25rem !important; }
+}
+@media (min-width: 1280px) {
+  html[data-ng-page="server-list"] .fi-main-ctn,
+  html[data-ng-page="server-list"] .fi-page { max-width: none !important; }
+}
+
+html[data-ng-hero="1"] .fi-page-header-heading { font-size: 1.05rem !important; opacity: 0.8; }
+html[data-ng-page="server-list"] .fi-page-header {
+  margin-bottom: 0.9rem !important;
+}
+
+/* Hero ----------------------------------------------------------------------*/
+.ng-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.1rem 1.5rem;
+  padding: 1.5rem 1.6rem;
+  margin: 0 0 1.25rem;
+  overflow: hidden;
+  border-radius: var(--ng-radius-lg);
+  border: 1px solid rgb(var(--ng-accent) / 0.28);
+  background:
+    linear-gradient(135deg, rgb(var(--ng-accent) / 0.16), rgb(var(--ng-accent-2) / 0.09) 55%, rgb(var(--ng-surface) / 0.55));
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+          backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 18px 40px -24px rgb(var(--ng-accent) / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+.ng-hero::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: -5rem;
+  top: -9rem;
+  width: 24rem;
+  height: 24rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--ng-accent-2) / 0.38), transparent 65%);
+}
+.ng-hero::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(var(--ng-border) / 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ng-border) / 0.16) 1px, transparent 1px);
+  background-size: 30px 30px;
+  -webkit-mask-image: linear-gradient(115deg, transparent 35%, #000 100%);
+          mask-image: linear-gradient(115deg, transparent 35%, #000 100%);
+}
+.ng-hero__main { min-width: 0; }
+.ng-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ng-font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(var(--ng-accent-soft));
+}
+.ng-hero__eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(var(--ng-accent));
+  box-shadow: 0 0 0 0 rgb(var(--ng-accent) / 0.6);
+  animation: ng-pulse 2.4s ease-out infinite;
+}
+.ng-hero__title {
+  margin: 0.4rem 0 0.25rem;
+  font-size: clamp(1.55rem, 1rem + 2vw, 2.25rem);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  background: linear-gradient(90deg, rgb(var(--ng-text)) 30%, rgb(var(--ng-accent-soft)));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+html:not(.dark) .ng-hero__title {
+  background-image: linear-gradient(90deg, rgb(var(--ng-text)) 30%, rgb(var(--ng-accent-strong)));
+}
+.ng-hero__sub {
+  margin: 0;
+  font-size: 0.86rem;
+  color: rgb(var(--ng-text-muted));
+}
+.ng-hero__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.7rem;
+}
+.ng-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.ng-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.32rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--ng-border) / 0.3);
+  background: rgb(var(--ng-surface) / 0.6);
+  font-family: var(--ng-font-mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  color: rgb(var(--ng-text));
+}
+.ng-chip b { font-weight: 650; }
+.ng-chip span { color: rgb(var(--ng-text-muted)); }
+.ng-chip i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(var(--ng-accent));
+}
+.ng-chip--ok i   { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.ng-chip--bad i  { background: #f43f5e; box-shadow: 0 0 8px #f43f5e; }
+.ng-chip--busy i { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+.ng-chip[hidden] { display: none; }
+
+.ng-tools { display: flex; align-items: center; gap: 0.6rem; }
+.ng-seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--ng-border) / 0.3);
+  background: rgb(var(--ng-bg) / 0.55);
+}
+.ng-seg button {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.6rem;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: rgb(var(--ng-text-muted));
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.ng-seg button:hover { color: rgb(var(--ng-text)); }
+.ng-seg button[aria-pressed="true"] {
+  background: rgb(var(--ng-accent) / 0.2);
+  color: rgb(var(--ng-accent-soft));
+  box-shadow: inset 0 0 0 1px rgb(var(--ng-accent) / 0.35);
+}
+.ng-kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  color: rgb(var(--ng-text-subtle));
+}
+.ng-kbd kbd {
+  font-family: var(--ng-font-mono);
+  padding: 0.05rem 0.4rem;
+  border-radius: 0.3rem;
+  border: 1px solid rgb(var(--ng-border) / 0.4);
+  background: rgb(var(--ng-surface-2) / 0.8);
+  color: rgb(var(--ng-text-muted));
+}
+@media (max-width: 720px) {
+  .ng-hero__side { align-items: flex-start; width: 100%; }
+  .ng-kbd { display: none; }
+}
+@keyframes ng-pulse {
+  0%   { box-shadow: 0 0 0 0 rgb(var(--ng-accent) / 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgb(var(--ng-accent) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--ng-accent) / 0); }
+}
+
+/* Server cards --------------------------------------------------------------*/
+html[data-ng-page="server-list"] .fi-ta-content-grid,
+html[data-ng-page="server-list"] .fi-ta-content > .fi-grid {
+  gap: 0.9rem !important;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr)) !important;
+}
+html[data-ng-page="server-list"][data-ng-layout="list"] .fi-ta-content-grid,
+html[data-ng-page="server-list"][data-ng-layout="list"] .fi-ta-content > .fi-grid {
+  grid-template-columns: 1fr !important;
+  gap: 0.6rem !important;
+}
+html[data-ng-page="server-list"][data-ng-layout="compact"] .fi-ta-content-grid,
+html[data-ng-page="server-list"][data-ng-layout="compact"] .fi-ta-content > .fi-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)) !important;
+  gap: 0.55rem !important;
+  font-size: 0.86em;
+}
+
+/* NOTE: no transform / filter / backdrop-filter on anything that can contain a
+   modal or dropdown — those would turn the card into the containing block of
+   position:fixed descendants and misplace them. Hover feedback uses
+   border + shadow only. */
+html[data-ng-page="server-list"] .fi-ta-record {
+  position: relative;
+  border-radius: var(--ng-radius-lg) !important;
+  border: 1px solid rgb(var(--ng-border) / 0.22) !important;
+  background: rgb(var(--ng-surface) / var(--ng-card-alpha, 0.78)) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 1px 2px rgb(0 0 0 / 0.12) !important;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease !important;
+}
+html[data-ng-page="server-list"] .fi-ta-record::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgb(var(--ng-accent) / 0.14), transparent 62%);
+  transition: opacity 0.2s ease;
+}
+html[data-ng-page="server-list"] .fi-ta-record:hover {
+  border-color: rgb(var(--ng-accent) / 0.5) !important;
+  box-shadow: 0 14px 34px -16px rgb(var(--ng-accent) / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.06) !important;
+}
+html[data-ng-page="server-list"] .fi-ta-record:hover::before { opacity: 1; }
+
+/* Status accent along the top edge (badge colour → card accent). */
+html[data-ng-page="server-list"] .fi-ta-record:has(.fi-badge.fi-color-success) { box-shadow: inset 0 2px 0 #10b981, 0 1px 2px rgb(0 0 0 / 0.12) !important; }
+html[data-ng-page="server-list"] .fi-ta-record:has(.fi-badge.fi-color-danger)  { box-shadow: inset 0 2px 0 #f43f5e, 0 1px 2px rgb(0 0 0 / 0.12) !important; }
+html[data-ng-page="server-list"] .fi-ta-record:has(.fi-badge.fi-color-warning) { box-shadow: inset 0 2px 0 #f59e0b, 0 1px 2px rgb(0 0 0 / 0.12) !important; }
+
+html[data-ng-page="server-list"] .fi-empty-state {
+  padding: 2.5rem 1.5rem !important;
+  border-radius: var(--ng-radius-lg) !important;
+  border: 1px dashed rgb(var(--ng-accent) / 0.35) !important;
+  background: rgb(var(--ng-surface) / 0.5) !important;
+}
+
+/* ─── General card density improvements (all pages) ───────────────────────── */
+.fi-resource-list-records-ctn {
+  gap: 0.75rem !important;
+}
+
+/* Resource list items / cards get a subtle left accent on hover */
+.fi-ta-ctn .fi-ta-row:hover td:first-child {
+  box-shadow: inset 2px 0 0 0 rgb(var(--ng-accent));
+}
+
+/* ─── Reduce motion ───────────────────────────────────────────────────────── */
+[data-ng-reduce="1"] *,
+[data-ng-reduce="1"] *::before,
+[data-ng-reduce="1"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   v3.4 — refinements layered on top of the base theme
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Extra hues + secondary accent used for gradients */
+:root                          { --ng-accent-2: 139 92 246; --ng-on-accent: 10 10 12; --ng-card-alpha: 0.78; }
+[data-ng-hue="cyan"]       { --ng-accent-2: 139 92 246; }
+[data-ng-hue="violet"]     { --ng-accent-2: 217 70 239; --ng-on-accent: 255 255 255; }
+[data-ng-hue="rose"]       { --ng-accent-2: 251 146 60; --ng-on-accent: 255 255 255; }
+[data-ng-hue="teal"]       { --ng-accent-2: 56 189 248; }
+[data-ng-hue="amber"]      { --ng-accent-2: 244 63 94; }
+[data-ng-hue="emerald"]    { --ng-accent-2: 56 189 248; }
+[data-ng-hue="indigo"]     { --ng-accent-2: 56 189 248; --ng-on-accent: 255 255 255; }
+[data-ng-hue="white"]      { --ng-accent-2: 161 161 170; }
+[data-ng-hue="sky"] {
+  --ng-accent: 14 165 233; --ng-accent-soft: 56 189 248; --ng-accent-strong: 2 132 199;
+  --ng-accent-2: 129 140 248;
+}
+[data-ng-hue="fuchsia"] {
+  --ng-accent: 217 70 239; --ng-accent-soft: 232 121 249; --ng-accent-strong: 192 38 211;
+  --ng-accent-2: 251 113 133; --ng-on-accent: 255 255 255;
+}
+[data-ng-hue="orange"] {
+  --ng-accent: 249 115 22; --ng-accent-soft: 251 146 60; --ng-accent-strong: 234 88 12;
+  --ng-accent-2: 244 63 94;
+}
+
+/* Corner radius */
+[data-ng-radius="sharp"]   { --ng-radius-sm: 0.2rem; --ng-radius: 0.3rem; --ng-radius-lg: 0.4rem; }
+[data-ng-radius="rounded"] { --ng-radius-sm: 0.4rem; --ng-radius: 0.6rem; --ng-radius-lg: 0.75rem; }
+[data-ng-radius="soft"]    { --ng-radius-sm: 0.65rem; --ng-radius: 0.95rem; --ng-radius-lg: 1.3rem; }
+
+/* Surface style. Glass = translucent (no blur on containers, see note above). */
+[data-ng-surface="solid"] { --ng-card-alpha: 1; }
+[data-ng-surface="glass"] .fi-section,
+[data-ng-surface="glass"] .fi-ta-ctn,
+[data-ng-surface="glass"] .fi-wi-stats-overview-stat,
+[data-ng-surface="glass"] .fi-simple-card {
+  background: rgb(var(--ng-surface) / 0.74) !important;
+}
+[data-ng-surface="glass"] .fi-sidebar,
+[data-ng-surface="glass"] .fi-topbar {
+  background: rgb(var(--ng-surface) / 0.86) !important;
+}
+
+/* Primary button: soft gradient + readable label on every hue */
+.fi-btn-primary,
+.fi-btn[class*="primary"] {
+  background-image: linear-gradient(135deg, rgb(var(--ng-accent)), rgb(var(--ng-accent) / 0.78)) !important;
+  color: rgb(var(--ng-on-accent)) !important;
+  box-shadow: 0 6px 18px -8px rgb(var(--ng-accent) / 0.7) !important;
+}
+
+/* Sidebar active item: glowing indicator */
+.fi-sidebar-nav-item-active,
+.fi-sidebar-item-active,
+.fi-sidebar-nav-item[aria-current="page"] {
+  background: linear-gradient(90deg, rgb(var(--ng-accent) / 0.16), rgb(var(--ng-accent) / 0.03)) !important;
+  box-shadow: inset 2px 0 0 0 rgb(var(--ng-accent)), 0 0 18px -8px rgb(var(--ng-accent) / 0.7) !important;
+}
+
+/* Section headers get a gradient hairline */
+.fi-section-header { position: relative; }
+.fi-section-header::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, rgb(var(--ng-accent) / 0.55), transparent 55%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Stat tiles: no transform on hover (keeps fixed descendants safe) */
+.fi-wi-stats-overview-stat:hover,
+body .fi-wi-stats-overview-stat:hover {
+  transform: none !important;
+  box-shadow: 0 10px 26px -16px rgb(var(--ng-accent) / 0.55) !important;
+}
+
+/* Auth pages */
+body[data-ng-auth] .fi-simple-card {
+  border-color: rgb(var(--ng-accent) / 0.28) !important;
+  box-shadow: 0 30px 70px -30px rgb(var(--ng-accent) / 0.45), var(--ng-shadow-lg) !important;
+}
+
+/* Light-mode contrast for badges and gradient text */
+html:not(.dark) .fi-badge-success, html:not(.dark) .fi-badge[class*="success"] { color: rgb(4, 120, 87) !important; }
+html:not(.dark) .fi-badge-danger,  html:not(.dark) .fi-badge[class*="danger"]  { color: rgb(190, 18, 60) !important; }
+html:not(.dark) .fi-badge-warning, html:not(.dark) .fi-badge[class*="warning"] { color: rgb(180, 83, 9) !important; }
+html:not(.dark) .fi-badge-info,    html:not(.dark) .fi-badge[class*="info"],
+html:not(.dark) .fi-badge-primary, html:not(.dark) .fi-badge[class*="primary"] { color: rgb(var(--ng-accent-strong)) !important; }
+html:not(.dark) .fi-sidebar-nav-item-active,
+html:not(.dark) .fi-sidebar-item-active { color: rgb(var(--ng-accent-strong)) !important; }
+
+/* Entrance animation. fill-mode "backwards" (not "both") so that once finished
+   no transform stays on the element — a lingering transform would become the
+   containing block for position:fixed modals inside it. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-ng-reduce="1"]) .fi-section,
+  html:not([data-ng-reduce="1"]) .fi-wi-stats-overview-stat,
+  html:not([data-ng-reduce="1"]) .ng-hero,
+  html:not([data-ng-reduce="1"]) .fi-ta-record {
+    animation: ng-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  html:not([data-ng-reduce="1"]) .fi-ta-record:nth-child(2) { animation-delay: 0.04s; }
+  html:not([data-ng-reduce="1"]) .fi-ta-record:nth-child(3) { animation-delay: 0.08s; }
+  html:not([data-ng-reduce="1"]) .fi-ta-record:nth-child(4) { animation-delay: 0.12s; }
+  html:not([data-ng-reduce="1"]) .fi-ta-record:nth-child(5) { animation-delay: 0.16s; }
+  html:not([data-ng-reduce="1"]) .fi-ta-record:nth-child(n+6) { animation-delay: 0.2s; }
+}
+@keyframes ng-rise {
+  from { opacity: 0; translate: 0 10px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Native dashboard (Filament page) — scoped to html[data-ng-page="native-dashboard"]
+   The hero reuses the .ng-hero / .ng-chip / .ng-seg rules above.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* The floating light/dark button is gone in 3.6.0 (the panel's own switcher still works). */
+#ng-theme-toggle { display: none !important; }
+
+html[data-ng-page="native-dashboard"] .fi-main { padding: 1.1rem 1.1rem 2rem !important; }
+@media (min-width: 1024px) {
+  html[data-ng-page="native-dashboard"] .fi-main { padding: 1.4rem 1.75rem 2.25rem !important; }
+}
+@media (min-width: 1280px) {
+  html[data-ng-page="native-dashboard"] .fi-main-ctn,
+  html[data-ng-page="native-dashboard"] .fi-page { max-width: none !important; }
+}
+html[data-ng-page="native-dashboard"] .fi-page-header { display: none; }
+
+.ng-native { --ng-tab-h: 4.25rem; }
+.ng-native [x-cloak] { display: none !important; }
+.ng-native button { font: inherit; color: inherit; }
+.ng-native button.ng-chip { cursor: pointer; }
+.ng-native .ng-chip.is-active { border-color: rgb(var(--ng-accent) / 0.6); }
+.ng-hero__mob { display: none; }
+
+/* Game filter chips */
+.ng-games { display: flex; gap: 0.5rem; margin: 0 0 0.9rem; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.ng-games::-webkit-scrollbar { display: none; }
+.ng-gchip {
+  flex: none; min-height: 2.25rem; padding: 0 1rem; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  border: 1px solid rgb(var(--ng-border) / 0.3); background: rgb(var(--ng-surface) / 0.55); font-weight: 500;
+}
+.ng-gchip:hover { border-color: rgb(var(--ng-accent) / 0.5); }
+.ng-gchip.is-active { border-color: rgb(var(--ng-accent) / 0.75); background: rgb(var(--ng-accent) / 0.16); font-weight: 600; }
+
+/* Search / sort bar */
+.ng-bar { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1rem; }
+.ng-bar__search, .ng-bar__select {
+  min-height: 2.4rem; padding: 0 0.85rem; border-radius: var(--ng-radius);
+  border: 1px solid rgb(var(--ng-border) / 0.3); background: rgb(var(--ng-surface) / 0.7); color: inherit; font: inherit;
+}
+.ng-bar__search { flex: 1 1 14rem; max-width: 26rem; }
+.ng-bar__search:focus, .ng-bar__select:focus { outline: 2px solid rgb(var(--ng-accent) / 0.55); outline-offset: 1px; }
+
+/* Cards */
+.ng-srv-grid { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr)); }
+.ng-srv-grid[data-layout="list"] { grid-template-columns: 1fr; gap: 0.6rem; }
+.ng-srv-grid[data-layout="compact"] { grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: 0.55rem; }
+
+/* No transform / filter / backdrop-filter on cards: they hold dropdowns and modals. */
+.ng-srv {
+  --tint: hsl(var(--h, 220) 75% 65%);
+  position: relative; display: flex; align-items: center; gap: 0.95rem;
+  padding: 1rem 1.05rem; border-radius: calc(var(--ng-radius-lg) + 4px);
+  border: 1px solid hsl(var(--h, 220) 45% 55% / 0.35);
+  background:
+    linear-gradient(135deg, hsl(var(--h, 220) 55% 40% / 0.18), transparent 70%),
+    rgb(var(--ng-surface) / var(--ng-card-alpha, 0.82));
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.14);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.ng-srv:hover { border-color: hsl(var(--h, 220) 70% 65% / 0.7); box-shadow: 0 14px 30px -18px hsl(var(--h, 220) 70% 55% / 0.6); }
+.ng-srv--busy { border-color: rgb(245 158 11 / 0.45); }
+.ng-srv--bad { border-color: hsl(var(--h, 220) 25% 55% / 0.3); }
+.ng-srv.is-pinned { box-shadow: inset 0 0 0 1px rgb(245 158 11 / 0.55), 0 1px 2px rgb(0 0 0 / 0.14); }
+
+.ng-srv__avatar {
+  flex: none; display: grid; place-items: center; width: 3.4rem; height: 3.4rem; overflow: hidden;
+  border-radius: 1rem; color: var(--tint); background: hsl(var(--h, 220) 55% 55% / 0.16);
+}
+.ng-srv__avatar img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+
+.ng-srv__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+.ng-srv__namerow { display: flex; align-items: center; gap: 0.35rem; min-width: 0; }
+.ng-srv__name {
+  font-size: 1.12rem; font-weight: 700; letter-spacing: -0.01em; color: inherit; text-decoration: none;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ng-srv__name:hover { color: var(--tint); }
+/* Whole card is the link target (buttons sit above it) */
+.ng-srv__name::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+
+.ng-pin, .ng-power, .ng-srv__addr { position: relative; z-index: 2; }
+.ng-pin { flex: none; background: transparent; border: 0; cursor: pointer; opacity: 0.3; font-size: 0.95rem; line-height: 1; padding: 0.2rem; border-radius: 6px; }
+.ng-pin:hover { opacity: 0.8; }
+.ng-pin[aria-pressed="true"] { opacity: 1; color: #f59e0b; }
+
+.ng-srv__pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ng-pill {
+  display: inline-flex; align-items: center; gap: 0.4rem; min-height: 1.75rem; padding: 0 0.65rem; border-radius: 999px;
+  font-size: 0.82rem; font-weight: 600; white-space: nowrap; max-width: 100%;
+}
+.ng-pill--game { border: 1px solid rgb(var(--ng-border) / 0.4); background: rgb(var(--ng-surface) / 0.5); }
+.ng-pill i { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: currentColor; }
+.ng-pill--ok { color: #34d399; background: rgb(16 185 129 / 0.16); }
+.ng-pill--busy { color: #fbbf24; background: rgb(245 158 11 / 0.16); }
+.ng-pill--bad { color: #fb7185; background: rgb(244 63 94 / 0.16); }
+.ng-pill--unknown { color: #94a3b8; background: rgb(148 163 184 / 0.16); }
+
+.ng-srv__stats { display: flex; flex-wrap: wrap; gap: 0.25rem 1.1rem; font-size: 0.86rem; align-items: center; }
+.ng-srv__stats > span { display: inline-flex; align-items: center; gap: 0.4rem; opacity: 0.95; }
+.ng-srv__stats svg { opacity: 0.6; }
+.ng-srv__stats em { font-style: normal; opacity: 0.6; }
+.ng-srv__stats b { font-weight: 600; color: var(--tint); font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.92em; }
+
+.ng-srv__addr {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.15rem 0.5rem; cursor: pointer;
+  border: 1px dashed rgb(var(--ng-border) / 0.35); border-radius: var(--ng-radius); background: transparent;
+}
+.ng-srv__addr code { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.78rem; opacity: 0.8; }
+.ng-srv__addr span { font-size: 0.72rem; color: #10b981; }
+
+.ng-srv__side { flex: none; display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+.ng-power {
+  display: grid; place-items: center; width: 3.4rem; height: 3.4rem; border-radius: 1rem; cursor: pointer;
+  border: 1px solid rgb(var(--ng-border) / 0.35); background: rgb(0 0 0 / 0.28); color: inherit;
+}
+.ng-power:hover { border-color: rgb(var(--ng-accent) / 0.7); }
+.ng-power[disabled] { opacity: 0.5; cursor: progress; }
+.ng-power--start { color: #34d399; }
+.ng-power--stop { color: #e2e8f0; }
+.ng-power--ghost { width: 2.4rem; height: 2.4rem; border-radius: 0.75rem; opacity: 0.75; }
+
+.ng-empty {
+  padding: 2.5rem 1.5rem; text-align: center; border-radius: var(--ng-radius-lg);
+  border: 1px dashed rgb(var(--ng-accent) / 0.35); background: rgb(var(--ng-surface) / 0.5);
+}
+.ng-native :is(.ng-gchip, .ng-power, .ng-pin, .ng-srv__addr, .ng-bar__search, .ng-bar__select, .ng-chip, .ng-tab, .ng-sheet__item):focus-visible {
+  outline: 2px solid rgb(var(--ng-accent) / 0.75); outline-offset: 2px;
+}
+
+/* Compact layout: keep it dense */
+.ng-srv-grid[data-layout="compact"] .ng-srv { padding: 0.7rem 0.8rem; gap: 0.7rem; }
+.ng-srv-grid[data-layout="compact"] .ng-srv__avatar { width: 2.6rem; height: 2.6rem; border-radius: 0.75rem; }
+.ng-srv-grid[data-layout="compact"] .ng-power { width: 2.6rem; height: 2.6rem; }
+.ng-srv-grid[data-layout="compact"] .ng-srv__addr,
+.ng-srv-grid[data-layout="compact"] .ng-power--ghost { display: none; }
+
+/* Bottom bar + sheet exist only on phones */
+.ng-tabbar, .ng-sheet { display: none; }
+
+@media (max-width: 768px) {
+  /* Pelican's own top bar is replaced by the bottom bar + menu sheet */
+  html[data-ng-page="native-dashboard"] .fi-topbar,
+  html[data-ng-page="native-dashboard"] .fi-sidebar { display: none !important; }
+  html[data-ng-page="native-dashboard"] .fi-main { padding: 1rem 1rem calc(var(--ng-tab-h) + 1.5rem + env(safe-area-inset-bottom, 0px)) !important; }
+
+  /* Compact title instead of the big hero */
+  .ng-native .ng-hero { padding: 0; margin: 0 0 1rem; background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; align-items: center; }
+  .ng-native .ng-hero__eyebrow, .ng-native .ng-hero__sub, .ng-native .ng-tools, .ng-hero__desk { display: none; }
+  .ng-hero__mob { display: inline; }
+  .ng-native .ng-hero__title { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; }
+  .ng-native .ng-chips { gap: 0.4rem; }
+  .ng-native .ng-bar__search { max-width: none; flex-basis: 100%; }
+  .ng-native .ng-bar__select { flex: 1 1 0; min-height: 2.75rem; }
+  .ng-native .ng-bar__search { min-height: 2.75rem; }
+
+  .ng-srv-grid, .ng-srv-grid[data-layout="compact"], .ng-srv-grid[data-layout="list"] { grid-template-columns: 1fr; gap: 0.75rem; }
+  .ng-srv { padding: 0.95rem; gap: 0.85rem; }
+  .ng-srv__avatar { width: 3.6rem; height: 3.6rem; }
+  .ng-srv__addr, .ng-power--ghost { display: none; }
+
+  .ng-tabbar {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; justify-content: space-around; align-items: flex-end;
+    height: calc(var(--ng-tab-h) + env(safe-area-inset-bottom, 0px)); padding: 0.4rem 0.5rem env(safe-area-inset-bottom, 0px);
+    background: rgb(var(--ng-surface) / 0.94); border-top: 1px solid rgb(var(--ng-border) / 0.3);
+    -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
+  }
+  .ng-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; min-height: 3.5rem;
+    background: none; border: 0; cursor: pointer; text-decoration: none; color: inherit; opacity: 0.65; font-size: 0.78rem; font-weight: 600;
+  }
+  .ng-tab.is-active { opacity: 1; color: rgb(var(--ng-accent)); }
+  .ng-tab--new { opacity: 1; }
+  .ng-tab--new svg {
+    width: 3.1rem; height: 3.1rem; padding: 0.8rem; margin-top: -1.4rem; border-radius: 999px; color: #fff;
+    background: linear-gradient(135deg, rgb(var(--ng-accent)), rgb(var(--ng-accent-2))); box-shadow: 0 8px 20px -8px rgb(var(--ng-accent) / 0.8);
+  }
+
+  .ng-sheet { display: block; position: fixed; inset: 0; z-index: 60; background: rgb(0 0 0 / 0.55); }
+  .ng-sheet[style*="display: none"] { display: none; }
+  .ng-sheet__panel {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 0.75rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+    border-radius: 1.25rem 1.25rem 0 0; background: rgb(var(--ng-surface)); border: 1px solid rgb(var(--ng-border) / 0.3); border-bottom: 0;
+  }
+  .ng-sheet__grip { width: 2.5rem; height: 0.3rem; margin: 0 auto 0.9rem; border-radius: 999px; background: rgb(var(--ng-border) / 0.5); }
+  .ng-sheet__who { padding: 0 0.25rem 0.6rem; font-weight: 700; font-size: 1.05rem; opacity: 0.9; }
+  .ng-sheet__item {
+    display: flex; align-items: center; gap: 0.8rem; width: 100%; min-height: 3.25rem; padding: 0 0.75rem; border-radius: 0.9rem;
+    background: none; border: 0; text-align: left; text-decoration: none; color: inherit; cursor: pointer; font-weight: 600;
+  }
+  .ng-sheet__item:active { background: rgb(var(--ng-accent) / 0.12); }
+  .ng-sheet__item--danger { color: #fb7185; }
+  .ng-sheet__close {
+    width: 100%; min-height: 3rem; margin-top: 0.5rem; border-radius: 0.9rem; cursor: pointer; font-weight: 600;
+    border: 1px solid rgb(var(--ng-border) / 0.35); background: rgb(var(--ng-surface) / 0.6);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Professional polish (3.6.2) — panel-wide, no functional changes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Console: cleaner frame + soft header strip */
+#terminal {
+  border-radius: calc(var(--ng-radius) + 0.1rem) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.03) !important;
+}
+[data-ng-console-glow="1"] #terminal {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.04),
+    0 0 0 1px rgb(var(--ng-accent) / 0.1),
+    0 0 28px rgb(var(--ng-accent) / 0.07) !important;
+}
+
+/* Notifications: left accent bar */
+.fi-no-notification {
+  position: relative !important;
+  overflow: hidden !important;
+  padding-left: 1.05rem !important;
+}
+.fi-no-notification::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0.55rem !important;
+  bottom: 0.55rem !important;
+  width: 3px !important;
+  border-radius: 0 2px 2px 0 !important;
+  background: rgb(var(--ng-accent)) !important;
+  opacity: 0.85 !important;
+}
+.fi-no-notification.fi-color-success::before,
+.fi-no-notification[class*="success"]::before { background: #10b981 !important; }
+.fi-no-notification.fi-color-danger::before,
+.fi-no-notification[class*="danger"]::before { background: #f43f5e !important; }
+.fi-no-notification.fi-color-warning::before,
+.fi-no-notification[class*="warning"]::before { background: #f59e0b !important; }
+
+/* Table headers denser and clearer */
+.fi-ta-header-cell {
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: rgb(var(--ng-text-subtle)) !important;
+}
+.fi-ta-ctn {
+  overflow: hidden !important;
+}
+
+/* Dropdown / select panels */
+.fi-dropdown-panel,
+.fi-select-input-list {
+  border-radius: var(--ng-radius) !important;
+  border: 1px solid rgb(var(--ng-border) / 0.16) !important;
+  box-shadow: var(--ng-shadow-lg) !important;
+}
+.fi-dropdown-list-item:hover,
+.fi-select-input-option:hover {
+  background: rgb(var(--ng-accent) / 0.1) !important;
+}
+
+/* Tabs: underline accent on active */
+.fi-tabs-item-active,
+.fi-tabs-item[aria-selected="true"] {
+  color: rgb(var(--ng-accent-soft)) !important;
+  box-shadow: inset 0 -2px 0 0 rgb(var(--ng-accent)) !important;
+  font-weight: 550 !important;
+}
+
+/* Empty states */
+.fi-empty-state-heading {
+  font-weight: 650 !important;
+  letter-spacing: -0.03em !important;
+}
+.fi-empty-state-description {
+  color: rgb(var(--ng-text-muted)) !important;
+  font-size: 0.85rem !important;
+}
+
+/* Selection + caret */
+::selection {
+  background: rgb(var(--ng-accent) / 0.28);
+  color: rgb(var(--ng-text));
+}
+html.dark ::selection {
+  background: rgb(var(--ng-accent) / 0.35);
+}
+
+/* Footer (Pelican copyright row) */
+.fi-footer {
+  border-top: 1px solid rgb(var(--ng-border) / calc(var(--ng-border-opacity) * 0.6)) !important;
+  color: rgb(var(--ng-text-subtle)) !important;
+  font-size: 0.72rem !important;
+  padding: 0.55rem 1rem !important;
+  background: transparent !important;
+}
+
+/* Loading indicators */
+.fi-loading-indicator,
+.fi-btn-loading-indicator {
+  color: rgb(var(--ng-accent-soft)) !important;
+}
+
+/* Account / user menu trigger */
+.fi-user-menu-trigger,
+.fi-avatar {
+  border-radius: 9999px !important;
+  transition: box-shadow 0.15s ease !important;
+}
+.fi-user-menu-trigger:hover,
+.fi-avatar:hover {
+  box-shadow: 0 0 0 2px rgb(var(--ng-accent) / 0.35) !important;
+}
+
+/* Breadcrumbs tighter */
+.fi-breadcrumbs-item {
+  font-size: 0.78rem !important;
+}
+.fi-breadcrumbs-item-active {
+  color: rgb(var(--ng-text)) !important;
+  font-weight: 550 !important;
+}
+
+/* Server page header strip (console / files / etc.) */
+.fi-page-header-actions {
+  gap: 0.4rem !important;
+}
+.fi-header-actions .fi-btn,
+.fi-page-header-actions .fi-btn {
+  border-radius: var(--ng-radius-sm) !important;
+}
+
+/* Subtle page content entrance (respects reduced motion) */
+/* Opacity only, and fill-mode "backwards": a retained transform on a page container
+   turns it into the containing block of every position:fixed descendant, which
+   traps modals / slide-overs (e.g. plugin Settings) inside the page content. */
+@keyframes ng-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+html:not([data-ng-reduce="1"]) .fi-page-content > * {
+  animation: ng-fade-in 0.28s var(--ng-ease, cubic-bezier(.2,.8,.2,1)) backwards;
+}
+html:not([data-ng-reduce="1"]) .fi-page-content > *:nth-child(1) { animation-delay: 0.02s; }
+html:not([data-ng-reduce="1"]) .fi-page-content > *:nth-child(2) { animation-delay: 0.05s; }
+html:not([data-ng-reduce="1"]) .fi-page-content > *:nth-child(3) { animation-delay: 0.08s; }
+html:not([data-ng-reduce="1"]) .fi-page-content > *:nth-child(4) { animation-delay: 0.11s; }
+
+/* Native dashboard: slightly tighter card grid gap on wide screens */
+@media (min-width: 1200px) {
+  .ng-native .ng-grid {
+    gap: 1rem !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3.7.0 — Hero logo, status strip, compact admin
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ng-hero__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+.ng-hero__logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  border-radius: 0.55rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgb(var(--ng-border) / 0.25);
+  background: rgb(var(--ng-surface) / 0.5);
+}
+.ng-hero__brand-text { min-width: 0; }
+
+/* Panel status strip under the hero */
+.ng-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--ng-radius);
+  border: 1px solid rgb(var(--ng-border) / var(--ng-border-opacity));
+  background: rgb(var(--ng-surface) / 0.55);
+}
+.ng-status__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 5.5rem;
+}
+.ng-status__k {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgb(var(--ng-text-subtle));
+}
+.ng-status__v {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: rgb(var(--ng-text));
+  font-variant-numeric: tabular-nums;
+}
+.ng-status__v small {
+  font-weight: 450;
+  color: rgb(var(--ng-text-muted));
+  font-size: 0.75rem;
+}
+
+/* Compact admin mode — denser tables & forms on the admin panel */
+html[data-ng-compact="1"] .fi-panel-admin .fi-main {
+  padding: 0.75rem 0.9rem 1.4rem !important;
+}
+html[data-ng-compact="1"] .fi-panel-admin .fi-section-header {
+  padding: 0.55rem 0.85rem !important;
+}
+html[data-ng-compact="1"] .fi-panel-admin .fi-section-content,
+html[data-ng-compact="1"] .fi-panel-admin .fi-section-content-ctn {
+  padding: 0.65rem 0.85rem !important;
+}
+html[data-ng-compact="1"] .fi-panel-admin .fi-ta-row td,
+html[data-ng-compact="1"] .fi-panel-admin .fi-ta-cell {
+  padding-top: 0.35rem !important;
+  padding-bottom: 0.35rem !important;
+  font-size: 0.8rem !important;
+}
+html[data-ng-compact="1"] .fi-panel-admin .fi-ta-header-cell {
+  padding-top: 0.4rem !important;
+  padding-bottom: 0.4rem !important;
+  font-size: 0.62rem !important;
+}
+html[data-ng-compact="1"] .fi-panel-admin .fi-btn {
+  min-height: 2rem !important;
+  padding-inline: 0.65rem !important;
+  font-size: 0.78rem !important;
+}
+html[data-ng-compact="1"] .fi-panel-admin .fi-wi-stats-overview-stat {
+  padding: 0.75rem 0.9rem !important;
+}
+
+@media (max-width: 640px) {
+  .ng-hero__logo { width: 2rem; height: 2rem; }
+  .ng-status { gap: 0.45rem 0.75rem; padding: 0.55rem 0.7rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3.7.1 — Responsive polish (phone · tablet · desktop)
+   Comfortable on any device; professional density without breaking layout.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Fluid type & spacing tokens */
+:root {
+  --ng-pad-x: clamp(0.75rem, 2.2vw, 1.55rem);
+  --ng-pad-y: clamp(0.75rem, 1.8vw, 1.25rem);
+  --ng-touch: 2.75rem;
+  --ng-title: clamp(1.15rem, 1rem + 1.2vw, 1.45rem);
+}
+
+/* Base main area scales with viewport */
+.fi-main {
+  padding: var(--ng-pad-y) var(--ng-pad-x) calc(var(--ng-pad-y) + 0.5rem) !important;
+}
+.fi-page-header-heading {
+  font-size: var(--ng-title) !important;
+}
+
+/* Safe areas (notched phones) */
+@supports (padding: env(safe-area-inset-top)) {
+  .fi-topbar {
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+  }
+  .fi-main {
+    padding-left: max(var(--ng-pad-x), env(safe-area-inset-left)) !important;
+    padding-right: max(var(--ng-pad-x), env(safe-area-inset-right)) !important;
+  }
+}
+
+/* Touch-friendly controls (all touch devices) */
+@media (hover: none) and (pointer: coarse) {
+  .fi-btn,
+  .fi-icon-btn,
+  .fi-ac-btn,
+  .fi-sidebar-nav-item,
+  .fi-sidebar-item-button {
+    min-height: var(--ng-touch) !important;
+  }
+  .fi-input,
+  .fi-select-input,
+  .fi-fo-field-wrp input,
+  .fi-fo-field-wrp select,
+  .fi-fo-field-wrp textarea {
+    min-height: var(--ng-touch) !important;
+    font-size: 16px !important; /* avoids iOS zoom on focus */
+  }
+  .fi-ta-row td {
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+}
+
+/* ─── Phone (≤ 640px) ─────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .fi-page-header {
+    margin-bottom: 0.75rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+  .fi-page-header-heading {
+    font-size: 1.2rem !important;
+    line-height: 1.25 !important;
+  }
+  .fi-page-header-actions {
+    flex-wrap: wrap !important;
+    gap: 0.35rem !important;
+    width: 100% !important;
+  }
+  .fi-page-header-actions .fi-btn {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+  }
+
+  .fi-section-header {
+    padding: 0.7rem 0.85rem !important;
+  }
+  .fi-section-content,
+  .fi-section-content-ctn {
+    padding: 0.75rem 0.85rem !important;
+  }
+
+  /* Tables scroll horizontally instead of crushing columns */
+  .fi-ta-ctn {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .fi-ta-table {
+    min-width: 32rem !important;
+  }
+
+  /* Stats stack nicely */
+  .fi-wi-stats-overview-stats-ctn {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.55rem !important;
+  }
+  .fi-wi-stats-overview-stat {
+    padding: 0.85rem 0.9rem !important;
+  }
+  .fi-wi-stats-overview-stat-value {
+    font-size: 1.25rem !important;
+  }
+
+  /* Auth card full width with comfortable padding */
+  body[data-ng-auth="1"] .fi-simple-main,
+  body[data-ng-auth] .fi-simple-main {
+    padding: 1rem 0.85rem !important;
+  }
+  body[data-ng-auth="1"] .fi-simple-card,
+  body[data-ng-auth] .fi-simple-card {
+    padding: 1.5rem 1.15rem !important;
+    border-radius: 1rem !important;
+  }
+
+  /* Console full bleed feel */
+  #terminal {
+    border-radius: 0.5rem !important;
+  }
+
+  /* Status strip: 2-column grid on phones */
+  .ng-status {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 0.65rem;
+  }
+  .ng-status__item { min-width: 0; }
+
+  /* Hero brand on phones */
+  .ng-hero__brand {
+    gap: 0.65rem;
+    justify-content: center;
+  }
+  .ng-hero__logo {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  /* Modals almost full screen on small phones */
+  .fi-modal-window {
+    margin: 0.5rem !important;
+    max-height: calc(100dvh - 1rem) !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .fi-wi-stats-overview-stats-ctn {
+    grid-template-columns: 1fr !important;
+  }
+  .ng-status {
+    grid-template-columns: 1fr;
+  }
+  .fi-page-header-heading {
+    font-size: 1.1rem !important;
+  }
+}
+
+/* ─── Tablet (641–1023px) ─────────────────────────────────────────────────── */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .fi-main {
+    padding: 1.05rem 1.15rem 1.75rem !important;
+  }
+  .fi-wi-stats-overview-stats-ctn {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.75rem !important;
+  }
+  .ng-status {
+    gap: 0.55rem 1.25rem;
+  }
+  .fi-modal-window {
+    max-width: min(36rem, 92vw) !important;
+  }
+}
+
+/* ─── Desktop (1024+) ─────────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .fi-page-content {
+    gap: 1.05rem !important;
+  }
+  .ng-status {
+    align-items: center;
+  }
+  .ng-status__item {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.45rem;
+  }
+  .ng-status__k {
+    font-size: 0.68rem;
+  }
+}
+
+/* Wide desktop */
+@media (min-width: 1440px) {
+  .fi-main {
+    padding-inline: clamp(1.5rem, 3vw, 2.5rem) !important;
+  }
+}
+
+/* Native dashboard cards: fluid grid */
+.ng-native .ng-grid,
+.ng-native [class*="ng-srv"] {
+  /* keep existing; ensure min touch */
+}
+.ng-native .ng-srv {
+  min-height: 0;
+}
+@media (max-width: 768px) {
+  .ng-native .ng-status {
+    margin-bottom: 0.85rem;
+  }
+  /* Keep logo visible on mobile hero even when title switches to brand name */
+  .ng-native .ng-hero__brand {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .ng-native .ng-hero__logo {
+    display: block !important;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 0.15rem;
+  }
+  .ng-native .ng-hero__brand-text {
+    text-align: center;
+  }
+  .ng-native .ng-power,
+  .ng-native .ng-pin {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+/* Landscape phones: less vertical chrome */
+@media (max-height: 480px) and (orientation: landscape) {
+  .fi-page-header {
+    margin-bottom: 0.5rem !important;
+    padding-bottom: 0.4rem !important;
+  }
+  body[data-ng-auth="1"] .fi-simple-card,
+  body[data-ng-auth] .fi-simple-card {
+    padding: 1.1rem 1.25rem !important;
+  }
+  .ng-native {
+    --ng-tab-h: 3.5rem;
+  }
+}
+
+/* Sidebar brand never overflows */
+.fi-sidebar-header .fi-logo span {
+  max-width: 9.5rem;
+}
+@media (min-width: 1024px) {
+  .fi-sidebar-header .fi-logo span {
+    max-width: 11rem;
+  }
+}
+
+/* Prevent horizontal page scroll from wide tables/widgets */
+.fi-page,
+.fi-main,
+.fi-body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* High-DPI sharpness for logos */
+.fi-logo img,
+.ng-hero__logo {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Print: clean, no particles */
+@media print {
+  #ng-bg,
+  #ng-theme-toggle,
+  .ng-particles,
+  .ng-aurora,
+  .ng-grid {
+    display: none !important;
+  }
+  .fi-sidebar,
+  .fi-topbar {
+    display: none !important;
+  }
+  .fi-main {
+    padding: 0 !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEONGLASS 4.0 — LIQUID GLASS LAYER
+   Frosted, refractive glass · specular edges · neon glow · floating orbs.
+   Rule of thumb: backdrop-filter is only used on LEAF surfaces (cards, hero,
+   dropdowns, modals, bars). Containers that can hold modals/fixed children
+   (sections, tables) get translucent "glass-lite" without blur.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --ng-lg-blur: 22px;
+  --ng-lg-sat: 175%;
+  --ng-lg-radius: 1.35rem;
+  --ng-neon: 0 0 0 1px rgb(var(--ng-accent) / 0.35), 0 0 28px -4px rgb(var(--ng-accent) / 0.45);
+}
+[data-ng-glass="low"]    { --ng-lg-blur: 12px; --ng-lg-sat: 140%; }
+[data-ng-glass="medium"] { --ng-lg-blur: 22px; --ng-lg-sat: 175%; }
+[data-ng-glass="high"]   { --ng-lg-blur: 34px; --ng-lg-sat: 210%; }
+[data-ng-radius="sharp"]   { --ng-lg-radius: 0.6rem; }
+[data-ng-radius="rounded"] { --ng-lg-radius: 1.35rem; }
+[data-ng-radius="soft"]    { --ng-lg-radius: 1.9rem; }
+[data-ng-surface="solid"]  { --ng-lg-blur: 0px; --ng-lg-sat: 100%; }
+
+/* ─── Tokens: deep indigo night / frosted daylight ─────────────────────────── */
+/* Borders use cool indigo tints — never pure white outlines. */
+html.dark, html.dark body, [data-theme="dark"] {
+  --ng-bg: 6 7 22;
+  --ng-bg-elevated: 11 13 34;
+  --ng-surface: 16 18 46;
+  --ng-surface-2: 26 29 66;
+  --ng-surface-3: 38 42 90;
+  --ng-border: 120 130 200;
+  --ng-text: 245 247 255;
+  --ng-text-muted: 165 172 214;
+  --ng-text-subtle: 122 130 176;
+  --ng-shadow-lg: 0 24px 60px -16px rgba(2, 3, 20, 0.75);
+  --lg-fill-a: rgb(180 190 255 / 0.09);
+  --lg-fill-b: rgb(140 150 230 / 0.03);
+  --lg-base: rgb(12 14 38 / 0.48);
+  --lg-stroke: rgb(140 155 230 / 0.18);
+  --lg-spec: rgb(200 210 255 / 0.22);
+  --lg-shadow: 0 18px 44px -20px rgb(1 2 18 / 0.85);
+}
+html:not(.dark), [data-theme="light"] {
+  --ng-bg: 226 232 252;
+  --ng-bg-elevated: 244 247 255;
+  --ng-surface: 255 255 255;
+  --ng-surface-2: 238 242 255;
+  --ng-surface-3: 224 230 250;
+  --ng-border: 130 142 210;
+  --ng-text: 14 17 40;
+  --ng-text-muted: 78 86 130;
+  --ng-text-subtle: 112 120 160;
+  --ng-shadow-lg: 0 24px 60px -18px rgba(60, 70, 140, 0.35);
+  --lg-fill-a: rgb(255 255 255 / 0.72);
+  --lg-fill-b: rgb(230 235 255 / 0.38);
+  --lg-base: rgb(255 255 255 / 0.22);
+  --lg-stroke: rgb(130 142 210 / 0.28);
+  --lg-spec: rgb(255 255 255 / 0.55);
+  --lg-shadow: 0 16px 40px -18px rgb(60 72 150 / 0.4);
+}
+html, body { background: rgb(var(--ng-bg)) !important; }
+
+/* ─── Background: neon orbs drifting behind the glass ──────────────────────── */
+.ng-aurora { opacity: 1; }
+.ng-aurora::before, .ng-aurora::after { display: none !important; }
+.ng-orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+.ng-orb--1 {
+  width: 58vmax; height: 58vmax; left: -16%; top: -26%;
+  background: radial-gradient(circle at 40% 40%, rgb(var(--ng-accent) / 0.55), rgb(var(--ng-accent) / 0) 66%);
+  animation: ng-orb-a 36s ease-in-out infinite alternate;
+}
+.ng-orb--2 {
+  width: 52vmax; height: 52vmax; right: -14%; bottom: -24%;
+  background: radial-gradient(circle at 55% 55%, rgb(var(--ng-accent-2) / 0.5), rgb(var(--ng-accent-2) / 0) 66%);
+  animation: ng-orb-b 46s ease-in-out infinite alternate;
+}
+.ng-orb--3 {
+  width: 34vmax; height: 34vmax; right: 18%; top: 8%;
+  background: radial-gradient(circle, rgb(var(--ng-accent-soft) / 0.28), rgb(var(--ng-accent-soft) / 0) 68%);
+  animation: ng-orb-c 58s ease-in-out infinite alternate;
+}
+html:not(.dark) .ng-orb { opacity: 0.55; }
+@keyframes ng-orb-a { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(9vw, 7vh, 0) scale(1.15); } }
+@keyframes ng-orb-b { from { transform: translate3d(0, 0, 0) scale(1.05); } to { transform: translate3d(-8vw, -8vh, 0) scale(0.92); } }
+@keyframes ng-orb-c { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-12vw, 10vh, 0) scale(1.2); } }
+[data-ng-reduce="1"] .ng-orb { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .ng-orb { animation: none !important; } }
+[data-ng-bg="grid"] .ng-orb--2, [data-ng-bg="grid"] .ng-orb--3 { display: none; }
+[data-ng-bg="plain"] .ng-orb { display: none; }
+
+/* ─── The glass recipe (leaf surfaces) ─────────────────────────────────────── */
+/* NOTE: .fi-dropdown-panel / .fi-select-input-list are NOT here — they need a
+   more opaque fill so sidebar/page text never bleeds through the menu. */
+.fi-sidebar, .fi-topbar, .fi-modal-window,
+.fi-no-notification, .fi-simple-card,
+.ng-hero, .ng-status, .ng-chip, .ng-seg, .ng-gchip, .ng-bar__search, .ng-bar__select,
+.ng-srv, .ng-empty, .ng-tabbar, .ng-sheet__panel {
+  background:
+    linear-gradient(145deg, var(--lg-fill-a), var(--lg-fill-b) 52%, var(--lg-fill-a)),
+    var(--lg-base) !important;
+  -webkit-backdrop-filter: blur(var(--ng-lg-blur)) saturate(var(--ng-lg-sat)) !important;
+          backdrop-filter: blur(var(--ng-lg-blur)) saturate(var(--ng-lg-sat)) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-spec),
+    inset 0 -12px 24px rgb(0 0 0 / 0.12),
+    0 0 0 0.5px rgb(var(--ng-accent) / 0.06),
+    var(--lg-shadow) !important;
+}
+/* Glass-lite for containers that may hold modals: no blur, same look */
+.fi-section, .fi-ta-ctn, .fi-wi-stats-overview-stat {
+  background:
+    linear-gradient(145deg, var(--lg-fill-a), var(--lg-fill-b) 55%, var(--lg-fill-a)),
+    var(--lg-base) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: var(--ng-lg-radius) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-spec),
+    inset 0 -10px 20px rgb(0 0 0 / 0.1),
+    var(--lg-shadow) !important;
+}
+html.dark .fi-section, html.dark .fi-ta-ctn, html.dark .fi-wi-stats-overview-stat { --lg-base: rgb(12 14 38 / 0.62); }
+.fi-section:hover, .fi-simple-card:hover { border-color: rgb(var(--ng-accent) / 0.35) !important; }
+.fi-section-header, .fi-ta-header, .fi-ta-filters, .fi-ta-header-toolbar { background: transparent !important; }
+
+/* Specular rim: soft accent-tinted edge (no pure white outline) */
+.ng-hero, .ng-srv, .ng-status, .fi-simple-card, .ng-empty {
+  position: relative;
+}
+/* NOTE: never set `position` on .fi-modal-window, .ng-tabbar or .ng-sheet__panel:
+   unlayered CSS beats Tailwind's layered utilities and would pull slide-overs,
+   modals and the phone dock out of their fixed / absolute positions. */
+.ng-srv::before, .ng-status::before, .ng-empty::before, .fi-simple-card::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; z-index: 0;
+  background: linear-gradient(
+    135deg,
+    rgb(var(--ng-accent-soft) / 0.35) 0%,
+    rgb(180 190 255 / 0.08) 28%,
+    transparent 45%,
+    transparent 70%,
+    rgb(var(--ng-accent) / 0.28) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0.85;
+}
+html:not(.dark) .ng-srv::before, html:not(.dark) .ng-status::before { opacity: 0.5; }
+/* Auth card used a top accent strip as ::before; the rim replaces it with a neon line */
+body[data-ng-auth] .fi-simple-card { border-radius: 1.8rem !important; padding: 2.2rem 2rem !important; }
+body[data-ng-auth] .fi-simple-card::after {
+  content: ''; position: absolute; left: 12%; right: 12%; top: 0; height: 2px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgb(var(--ng-accent)), rgb(var(--ng-accent-2)), transparent);
+  box-shadow: 0 0 18px rgb(var(--ng-accent) / 0.8);
+}
+
+/* ─── Sidebar & topbar: floating glass panels ──────────────────────────────── */
+.fi-sidebar { border-radius: 0 var(--ng-lg-radius) var(--ng-lg-radius) 0 !important; border-left: 0 !important; }
+.fi-topbar {
+  border-top: 0 !important;
+  border-inline: 0 !important;
+  border-radius: 0 0 1.1rem 1.1rem !important;
+  /* never clip the user-menu / dropdown portals */
+  overflow: visible !important;
+}
+.fi-topbar .fi-user-menu,
+.fi-topbar [data-filament-user-menu] {
+  overflow: visible !important;
+  z-index: 40;
+}
+.fi-sidebar-nav-item, .fi-sidebar-item-button {
+  border-radius: 0.95rem !important;
+  transition: background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease !important;
+}
+.fi-sidebar-nav-item:hover, .fi-sidebar-item-button:hover {
+  background: rgb(var(--ng-accent) / 0.08) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.1) !important;
+}
+.fi-sidebar-nav-item-active, .fi-sidebar-item-active, .fi-sidebar-nav-item[aria-current="page"] {
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.26), rgb(var(--ng-accent-2) / 0.16)) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.22), 0 0 20px -4px rgb(var(--ng-accent) / 0.5) !important;
+  color: rgb(var(--ng-text)) !important;
+  border: 1px solid rgb(var(--ng-accent) / 0.3) !important;
+}
+html:not(.dark) .fi-sidebar-nav-item-active, html:not(.dark) .fi-sidebar-item-active { color: rgb(var(--ng-accent-strong)) !important; }
+
+/* ─── Typography with a neon edge ──────────────────────────────────────────── */
+.fi-page-header-heading { text-shadow: 0 0 28px rgb(var(--ng-accent) / 0.25); }
+.fi-section-header::after { background: linear-gradient(90deg, rgb(var(--ng-accent) / 0.7), rgb(var(--ng-accent-2) / 0.4), transparent) !important; }
+
+/* ─── Buttons: neon glass (no hard white borders) ──────────────────────────── */
+.fi-btn { border-radius: 999px !important; padding-inline: 1rem !important; }
+.fi-btn-primary, .fi-btn[class*="primary"] {
+  background: linear-gradient(135deg, rgb(var(--ng-accent)), rgb(var(--ng-accent-2))) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.35);
+  border: 1px solid rgb(var(--ng-accent-soft) / 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    inset 0 -8px 16px rgb(0 0 0 / 0.15),
+    0 8px 24px -8px rgb(var(--ng-accent) / 0.7) !important;
+}
+.fi-btn-primary:hover, .fi-btn[class*="primary"]:hover {
+  filter: brightness(1.08) saturate(1.1);
+  border-color: rgb(var(--ng-accent-soft) / 0.7) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    0 10px 30px -6px rgb(var(--ng-accent) / 0.9) !important;
+}
+.fi-btn-gray, .fi-btn[class*="gray"] {
+  background: linear-gradient(145deg, var(--lg-fill-a), var(--lg-fill-b)) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec) !important;
+}
+.fi-btn-gray:hover, .fi-btn[class*="gray"]:hover { border-color: rgb(var(--ng-accent) / 0.45) !important; }
+
+/* ─── Inputs: inset glass wells ────────────────────────────────────────────── */
+.fi-input-wrp, .fi-select-input, .fi-ta-search-field,
+.fi-fo-field-wrp input, .fi-fo-field-wrp select, .fi-fo-field-wrp textarea {
+  background: rgb(0 0 0 / 0.2) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: 0.95rem !important;
+  box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.25), inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.04) !important;
+}
+html:not(.dark) .fi-input-wrp, html:not(.dark) .fi-select-input, html:not(.dark) .fi-ta-search-field,
+html:not(.dark) .fi-fo-field-wrp input, html:not(.dark) .fi-fo-field-wrp select, html:not(.dark) .fi-fo-field-wrp textarea {
+  background: rgb(255 255 255 / 0.55) !important;
+  box-shadow: inset 0 1px 3px rgb(60 72 150 / 0.12) !important;
+}
+.fi-input-wrp:focus-within, .fi-select-input:focus-within,
+.fi-fo-field-wrp input:focus, .fi-fo-field-wrp select:focus, .fi-fo-field-wrp textarea:focus {
+  border-color: rgb(var(--ng-accent) / 0.65) !important;
+  box-shadow: 0 0 0 3px rgb(var(--ng-accent) / 0.18), 0 0 22px -4px rgb(var(--ng-accent) / 0.4) !important;
+}
+
+/* ─── Badges & tabs ────────────────────────────────────────────────────────── */
+.fi-badge { box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.12) !important; }
+.fi-tabs, .fi-fo-tabs {
+  display: inline-flex !important; width: auto !important; padding: 0.25rem !important; gap: 0.15rem !important;
+  border: 1px solid var(--lg-stroke) !important; border-radius: 999px !important;
+  background: linear-gradient(145deg, var(--lg-fill-a), var(--lg-fill-b)) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec) !important;
+}
+.fi-tabs-item, .fi-fo-tabs-item { border-radius: 999px !important; border-bottom: 0 !important; margin: 0 !important; }
+.fi-tabs-item-active, .fi-fo-tabs-item-active, .fi-tabs-item[aria-selected="true"] {
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.28), rgb(var(--ng-accent-2) / 0.18)) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.2), 0 0 18px -4px rgb(var(--ng-accent) / 0.5) !important;
+}
+
+/* ─── Modals, dropdowns, notifications ─────────────────────────────────────── */
+/* No overflow rule here: Filament modals / slide-overs scroll through it. */
+.fi-modal-window { border-radius: 1.7rem !important; }
+.fi-modal-window, .fi-modal-content { overscroll-behavior: contain; }
+.fi-modal-close-overlay, .fi-modal-overlay {
+  background: rgb(4 5 22 / 0.55) !important;
+  -webkit-backdrop-filter: blur(8px) !important; backdrop-filter: blur(8px) !important;
+}
+.fi-no-notification { border-radius: 1.2rem !important; }
+
+/* User menu / dropdown panels: opaque glass so nothing bleeds through */
+.fi-dropdown-panel,
+.fi-select-input-list,
+.fi-user-menu .fi-dropdown-panel,
+[x-float] .fi-dropdown-panel {
+  isolation: isolate !important;
+  z-index: 50 !important;
+  overflow: hidden !important;
+  border-radius: 1.15rem !important;
+  border: 1px solid var(--lg-stroke) !important;
+  /* Solid enough base — glass look without see-through text */
+  background:
+    linear-gradient(160deg, rgb(180 190 255 / 0.08), transparent 55%),
+    rgb(14 16 42 / 0.94) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+          backdrop-filter: blur(20px) saturate(160%) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-spec),
+    0 12px 40px -10px rgb(0 0 0 / 0.65),
+    0 0 0 1px rgb(var(--ng-accent) / 0.08) !important;
+}
+html:not(.dark) .fi-dropdown-panel,
+html:not(.dark) .fi-select-input-list,
+html:not(.dark) .fi-user-menu .fi-dropdown-panel {
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.5), transparent 55%),
+    rgb(244 247 255 / 0.96) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 12px 36px -10px rgb(60 72 150 / 0.35),
+    0 0 0 1px rgb(var(--ng-accent) / 0.1) !important;
+}
+/* Menu items: solid hover, no ghost text */
+.fi-dropdown-list-item,
+.fi-select-input-option,
+.fi-dropdown-panel a,
+.fi-dropdown-panel button {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+.fi-dropdown-list-item:hover,
+.fi-select-input-option:hover,
+.fi-dropdown-panel a:hover,
+.fi-dropdown-panel button:hover {
+  background: rgb(var(--ng-accent) / 0.14) !important;
+}
+/* Theme toggle / extra controls inside user menu stay in flow */
+.fi-dropdown-panel .fi-icon-btn,
+.fi-user-menu .fi-icon-btn,
+.fi-dropdown-panel [id*="theme"],
+.fi-dropdown-panel #ng-theme-toggle {
+  position: relative !important;
+  z-index: 2;
+}
+
+/* ─── Console frame ────────────────────────────────────────────────────────── */
+#terminal {
+  border-radius: 1.2rem !important;
+  border: 1px solid var(--lg-stroke) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec), var(--lg-shadow) !important;
+  background: rgb(5 6 20 / 0.82) !important;
+}
+[data-ng-console-glow="1"] #terminal {
+  border-color: rgb(var(--ng-accent) / 0.4) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec), 0 0 0 1px rgb(var(--ng-accent) / 0.1), 0 0 40px -8px rgb(var(--ng-accent) / 0.4) !important;
+}
+
+/* ─── Dashboard: hero ──────────────────────────────────────────────────────── */
+.ng-hero {
+  border-radius: calc(var(--ng-lg-radius) + 0.4rem) !important;
+  padding: 1.7rem 1.9rem !important;
+  overflow: hidden;
+}
+.ng-hero::before {
+  right: -6rem !important; top: -10rem !important; width: 28rem !important; height: 28rem !important;
+  background: radial-gradient(circle, rgb(var(--ng-accent-2) / 0.42), transparent 66%) !important;
+}
+/* moving specular sheen across the glass */
+.ng-hero::after {
+  inset: -60% auto -60% -40% !important; width: 40% !important;
+  background: linear-gradient(105deg, transparent, rgb(255 255 255 / 0.13), transparent) !important;
+  -webkit-mask-image: none !important; mask-image: none !important;
+  animation: ng-sheen 9s ease-in-out infinite;
+}
+@keyframes ng-sheen { 0%, 55% { transform: translateX(0); } 100% { transform: translateX(520%); } }
+[data-ng-reduce="1"] .ng-hero::after { animation: none !important; display: none; }
+@media (prefers-reduced-motion: reduce) { .ng-hero::after { animation: none !important; display: none; } }
+.ng-hero__title {
+  font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem) !important;
+  background: linear-gradient(95deg, rgb(var(--ng-text)) 10%, rgb(var(--ng-accent-soft)) 55%, rgb(var(--ng-accent-2)) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent !important;
+  filter: drop-shadow(0 0 18px rgb(var(--ng-accent) / 0.35));
+}
+.ng-hero__logo { border-radius: 1rem; box-shadow: 0 0 0 1px var(--lg-stroke), 0 0 26px -4px rgb(var(--ng-accent) / 0.6); }
+
+/* chips, segmented control, kbd */
+.ng-chip { border-radius: 999px !important; padding: 0.4rem 0.8rem !important; transition: box-shadow 0.18s ease, border-color 0.18s ease; }
+.ng-chip:hover { border-color: rgb(var(--ng-accent) / 0.6) !important; }
+.ng-native .ng-chip.is-active { border-color: rgb(var(--ng-accent)) !important; box-shadow: inset 0 1px 0 var(--lg-spec), 0 0 20px -4px rgb(var(--ng-accent) / 0.7) !important; }
+.ng-chip--ok i   { box-shadow: 0 0 10px 1px #34d399 !important; background: #34d399 !important; }
+.ng-chip--bad i  { box-shadow: 0 0 10px 1px #fb7185 !important; background: #fb7185 !important; }
+.ng-chip--busy i { box-shadow: 0 0 10px 1px #fbbf24 !important; background: #fbbf24 !important; }
+.ng-seg { border-radius: 999px !important; padding: 0.2rem !important; }
+.ng-seg button { border-radius: 999px !important; }
+.ng-seg button[aria-pressed="true"] {
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.32), rgb(var(--ng-accent-2) / 0.2)) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.22), 0 0 16px -4px rgb(var(--ng-accent) / 0.55) !important;
+  color: rgb(var(--ng-text)) !important;
+}
+.ng-status { border-radius: 1.2rem !important; padding: 0.8rem 1.1rem !important; }
+.ng-gchip { border-radius: 999px !important; transition: box-shadow 0.18s ease, border-color 0.18s ease; }
+.ng-gchip.is-active {
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.28), rgb(var(--ng-accent-2) / 0.18)) !important;
+  border-color: rgb(var(--ng-accent) / 0.55) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.2), 0 0 18px -4px rgb(var(--ng-accent) / 0.55) !important;
+}
+.ng-bar__search, .ng-bar__select { border-radius: 999px !important; padding-inline: 1.1rem !important; }
+.ng-bar__search:focus, .ng-bar__select:focus { outline: 0 !important; border-color: rgb(var(--ng-accent)) !important; box-shadow: 0 0 0 3px rgb(var(--ng-accent) / 0.22), 0 0 24px -4px rgb(var(--ng-accent) / 0.55) !important; }
+
+/* ─── Dashboard: server cards ──────────────────────────────────────────────── */
+.ng-srv {
+  --st: 148 163 184;
+  isolation: isolate;
+  border-radius: var(--ng-lg-radius) !important;
+  padding: 1.1rem 1.15rem !important;
+  overflow: hidden;
+  transition: transform 0.22s cubic-bezier(.2,.8,.2,1), box-shadow 0.22s ease, border-color 0.22s ease !important;
+}
+.ng-srv--ok   { --st: 52 211 153; }
+.ng-srv--busy { --st: 251 191 36; }
+.ng-srv--bad  { --st: 251 113 133; }
+/* liquid tint: the game's hue bleeds in from the corner, the status glows along the bottom */
+.ng-srv::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
+  background:
+    radial-gradient(120% 90% at 0% 0%, hsl(var(--h, 220) 85% 60% / 0.20), transparent 60%),
+    radial-gradient(90% 60% at 100% 110%, rgb(var(--st) / 0.20), transparent 70%);
+}
+.ng-srv:hover {
+  transform: translateY(-3px);
+  border-color: rgb(var(--st) / 0.55) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec), 0 22px 50px -18px rgb(var(--st) / 0.55), 0 0 0 1px rgb(var(--st) / 0.18) !important;
+}
+.ng-srv--ok { border-color: rgb(var(--st) / 0.32) !important; }
+.ng-srv--busy { border-color: rgb(var(--st) / 0.4) !important; }
+.ng-srv--bad { opacity: 0.92; }
+.ng-srv.is-pinned { box-shadow: inset 0 1px 0 var(--lg-spec), 0 0 0 1px rgb(251 191 36 / 0.6), 0 0 30px -8px rgb(251 191 36 / 0.5) !important; }
+.ng-srv__avatar {
+  width: 3.7rem !important; height: 3.7rem !important; border-radius: 1.15rem !important;
+  background: linear-gradient(145deg, hsl(var(--h, 220) 80% 62% / 0.32), hsl(var(--h, 220) 80% 50% / 0.08)) !important;
+  border: 1px solid hsl(var(--h, 220) 70% 65% / 0.28);
+  box-shadow: inset 0 1px 0 hsl(var(--h, 220) 80% 80% / 0.25), 0 8px 22px -8px hsl(var(--h, 220) 85% 55% / 0.65);
+}
+.ng-srv__avatar img { background: rgb(20 22 50 / 0.9) !important; }
+.ng-srv__name { font-size: 1.02rem !important; font-weight: 650 !important; letter-spacing: -0.02em; }
+.ng-pill { border-radius: 999px !important; box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.1); backdrop-filter: none !important; }
+.ng-pill--game { background: rgb(var(--ng-accent) / 0.07) !important; border: 1px solid var(--lg-stroke) !important; }
+.ng-pill--ok { color: #6ee7b7 !important; background: rgb(16 185 129 / 0.18) !important; }
+.ng-pill--busy { color: #fcd34d !important; background: rgb(245 158 11 / 0.18) !important; }
+.ng-pill--bad { color: #fda4af !important; background: rgb(244 63 94 / 0.18) !important; }
+html:not(.dark) .ng-pill--ok { color: #047857 !important; }
+html:not(.dark) .ng-pill--busy { color: #b45309 !important; }
+html:not(.dark) .ng-pill--bad { color: #be123c !important; }
+.ng-pill--ok i { box-shadow: 0 0 8px 1px currentColor; animation: ng-pulse-dot 2.4s ease-in-out infinite; }
+@keyframes ng-pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+[data-ng-reduce="1"] .ng-pill--ok i { animation: none; }
+
+/* CPU / RAM meters */
+.ng-srv__meters { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 0.9rem; }
+.ng-meter { min-width: 0; }
+.ng-meter__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.4rem; font-size: 0.7rem; }
+.ng-meter__top em { font-style: normal; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 600; color: rgb(var(--ng-text-subtle)); }
+.ng-meter__top b { font-family: var(--ng-font-mono); font-size: 0.78rem; font-weight: 600; color: rgb(var(--ng-text)); font-variant-numeric: tabular-nums; }
+.ng-meter__bar {
+  position: relative; height: 0.42rem; margin-top: 0.32rem; border-radius: 999px; overflow: hidden;
+  background: rgb(0 0 0 / 0.28); box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.4);
+}
+html:not(.dark) .ng-meter__bar { background: rgb(60 72 150 / 0.14); box-shadow: inset 0 1px 2px rgb(60 72 150 / 0.2); }
+.ng-meter__bar i {
+  display: block; height: 100%; min-width: 0.42rem; border-radius: inherit;
+  background: linear-gradient(90deg, rgb(var(--ng-accent)), rgb(var(--ng-accent-2)));
+  box-shadow: 0 0 12px rgb(var(--ng-accent) / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.45);
+  transition: width 0.6s cubic-bezier(.2,.8,.2,1);
+}
+.ng-meter.is-hot .ng-meter__bar i { background: linear-gradient(90deg, #fbbf24, #fb7185); box-shadow: 0 0 12px rgb(251 113 133 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.45); }
+.ng-meter.is-idle .ng-meter__bar i { opacity: 0.25; box-shadow: none; }
+
+.ng-srv__addr {
+  border-radius: 999px !important; padding: 0.22rem 0.7rem !important;
+  background: rgb(0 0 0 / 0.2) !important; border: 1px solid var(--lg-stroke) !important;
+}
+html:not(.dark) .ng-srv__addr { background: rgb(255 255 255 / 0.55) !important; }
+
+/* Power buttons: round glass orbs with a status glow (soft tinted edges) */
+.ng-power {
+  width: 3rem !important; height: 3rem !important; border-radius: 50% !important;
+  background: linear-gradient(145deg, rgb(180 190 255 / 0.14), rgb(12 14 38 / 0.2)) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec), inset 0 -6px 12px rgb(0 0 0 / 0.18), 0 8px 20px -8px rgb(0 0 0 / 0.45) !important;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+.ng-power:hover { transform: scale(1.08); }
+.ng-power:active { transform: scale(0.95); }
+.ng-power--start { color: #6ee7b7 !important; }
+.ng-power--start:hover {
+  box-shadow: inset 0 1px 0 rgb(110 231 183 / 0.35), 0 0 26px 2px rgb(52 211 153 / 0.6) !important;
+  border-color: rgb(52 211 153 / 0.65) !important;
+}
+.ng-power--stop { color: #fda4af !important; }
+.ng-power--stop:hover {
+  box-shadow: inset 0 1px 0 rgb(253 164 175 / 0.3), 0 0 26px 2px rgb(251 113 133 / 0.55) !important;
+  border-color: rgb(251 113 133 / 0.65) !important;
+}
+html:not(.dark) .ng-power--start { color: #047857 !important; }
+html:not(.dark) .ng-power--stop { color: #be123c !important; }
+.ng-power--ghost { width: 2.4rem !important; height: 2.4rem !important; }
+.ng-pin { transition: opacity 0.15s ease, transform 0.15s ease; }
+.ng-pin:hover { transform: scale(1.2) rotate(12deg); }
+.ng-pin[aria-pressed="true"] { filter: drop-shadow(0 0 6px rgb(251 191 36 / 0.9)); }
+
+.ng-srv-grid { gap: 1.05rem !important; }
+.ng-srv-grid[data-layout="compact"] .ng-srv { padding: 0.8rem 0.9rem !important; }
+.ng-srv-grid[data-layout="compact"] .ng-srv__meters { display: none; }
+.ng-srv-grid[data-layout="compact"] .ng-srv__avatar { width: 2.8rem !important; height: 2.8rem !important; }
+.ng-srv-grid[data-layout="compact"] .ng-power { width: 2.6rem !important; height: 2.6rem !important; }
+
+/* entrance: cards rise in with a small stagger */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-ng-reduce="1"]) .ng-srv { animation: ng-card-in 0.5s cubic-bezier(.2,.8,.2,1) backwards; }
+  html:not([data-ng-reduce="1"]) .ng-srv:nth-child(2) { animation-delay: 0.04s; }
+  html:not([data-ng-reduce="1"]) .ng-srv:nth-child(3) { animation-delay: 0.08s; }
+  html:not([data-ng-reduce="1"]) .ng-srv:nth-child(4) { animation-delay: 0.12s; }
+  html:not([data-ng-reduce="1"]) .ng-srv:nth-child(5) { animation-delay: 0.16s; }
+  html:not([data-ng-reduce="1"]) .ng-srv:nth-child(n+6) { animation-delay: 0.2s; }
+}
+@keyframes ng-card-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+/* ─── Phones: floating glass dock + glass sheet ────────────────────────────── */
+@media (max-width: 768px) {
+  .ng-native .ng-hero { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  .ng-native .ng-hero::before, .ng-native .ng-hero::after { display: none !important; }
+  .ng-native .ng-hero__title { font-size: 2rem !important; }
+  .ng-srv { padding: 1rem !important; }
+  .ng-srv__meters { grid-template-columns: 1fr 1fr; }
+
+  .ng-tabbar {
+    left: 0.8rem !important; right: 0.8rem !important;
+    bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px)) !important;
+    height: var(--ng-tab-h) !important; padding: 0.35rem 0.5rem !important;
+    border-radius: 2rem !important; align-items: center !important;
+    box-shadow: inset 0 1px 0 var(--lg-spec), 0 20px 44px -12px rgb(1 2 18 / 0.85), 0 0 0 1px rgb(var(--ng-accent) / 0.12) !important;
+  }
+  .ng-tab { border-radius: 1.4rem !important; min-height: 3.1rem !important; transition: background 0.2s ease, color 0.2s ease; }
+  .ng-tab.is-active {
+    color: rgb(var(--ng-text)) !important;
+    background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.3), rgb(var(--ng-accent-2) / 0.2));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.38), 0 0 20px -4px rgb(var(--ng-accent) / 0.7);
+  }
+  .ng-tab--new svg {
+    margin-top: -0.2rem !important; width: 2.9rem !important; height: 2.9rem !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5), 0 0 26px -2px rgb(var(--ng-accent) / 0.9) !important;
+  }
+  .ng-sheet { background: rgb(3 4 20 / 0.5) !important; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .ng-sheet__panel { border-radius: 2rem 2rem 0 0 !important; border-bottom: 0 !important; }
+  .ng-sheet__grip { background: rgb(255 255 255 / 0.35) !important; }
+  .ng-sheet__item { border-radius: 1.1rem !important; }
+  .ng-sheet__item:active { background: rgb(var(--ng-accent) / 0.18) !important; }
+  .ng-sheet__close { border-radius: 1.1rem !important; background: linear-gradient(140deg, var(--lg-fill-a), var(--lg-fill-b)) !important; box-shadow: inset 0 1px 0 var(--lg-spec); }
+}
+
+/* ─── Fallbacks: no blur support / reduced transparency ────────────────────── */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  html.dark { --lg-base: rgb(14 16 44 / 0.9); }
+  html:not(.dark) { --lg-base: rgb(255 255 255 / 0.9); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  html.dark { --lg-base: rgb(14 16 44 / 0.96); --lg-fill-a: rgb(255 255 255 / 0.06); --lg-fill-b: rgb(255 255 255 / 0.02); }
+  html:not(.dark) { --lg-base: rgb(255 255 255 / 0.96); }
+  .ng-orb { opacity: 0.35; }
+}
+@media print { .ng-orb { display: none !important; } }
+
+
+/* ─── 4.0.2: modals / slide-overs / form actions — always usable ───────────── */
+.fi-modal-content { min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.fi-modal-footer {
+  background: linear-gradient(180deg, transparent, rgb(var(--ng-bg-elevated) / 0.55)) !important;
+  border-top: 1px solid var(--lg-stroke) !important;
+  flex-shrink: 0;
+}
+.fi-modal-footer .fi-btn, .fi-form-actions .fi-btn, .fi-ac .fi-btn { min-height: 2.4rem; }
+/* Save / submit buttons: solid neon, readable on every accent hue */
+.fi-modal-footer .fi-btn-primary, .fi-form-actions .fi-btn-primary,
+button[type="submit"].fi-btn-primary {
+  background: linear-gradient(135deg, rgb(var(--ng-accent)), rgb(var(--ng-accent-2))) !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.fi-btn-primary .fi-btn-label, .fi-btn-primary span, .fi-btn-primary svg { color: #fff !important; opacity: 1 !important; }
+/* Sticky form action bars (settings pages) float above the content as a glass strip */
+.fi-sticky.fi-form-actions, .fi-form-actions.fi-sticky {
+  z-index: 20;
+  padding: 0.7rem 1rem !important;
+  border-radius: 1.2rem !important;
+  background: linear-gradient(140deg, var(--lg-fill-a), var(--lg-fill-b)), var(--lg-base) !important;
+  -webkit-backdrop-filter: blur(var(--ng-lg-blur)) saturate(var(--ng-lg-sat));
+          backdrop-filter: blur(var(--ng-lg-blur)) saturate(var(--ng-lg-sat));
+  border: 1px solid var(--lg-stroke) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec), var(--lg-shadow) !important;
+}
+
+/* 4.0.3: containers that wrap tables / actions must never become a containing block for fixed modals */
+.fi-page-content, .fi-page-content > *, .fi-main, .fi-ta, .fi-ta-ctn, .fi-resource-list-records-ctn {
+  transform: none; filter: none; perspective: none; will-change: auto;
+}
+
+/* ─── 4.0.4: button groups (Start / Restart / Kill) — separate glass pills ──── */
+.fi-btn-group, .fi-ac-btn-group {
+  display: inline-flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-ring-color: transparent !important;
+}
+.fi-btn-group > *, .fi-ac-btn-group > *, .fi-btn-group .fi-btn, .fi-ac-btn-group .fi-btn {
+  margin: 0 !important;
+  border-radius: 999px !important;
+  border-width: 1px !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
+/* kill the hairline dividers Filament draws between grouped buttons */
+.fi-btn-group > * + *, .fi-ac-btn-group > * + * { border-inline-start-width: 1px !important; }
+.fi-btn-group::before, .fi-btn-group::after { display: none !important; }
+
+/* Colour roles as neon glass pills (soft tinted borders, no pure white) */
+.fi-btn-danger, .fi-btn[class*="danger"],
+.fi-btn-success, .fi-btn[class*="success"],
+.fi-btn-warning, .fi-btn[class*="warning"],
+.fi-btn-info, .fi-btn[class*="info"] {
+  color: #fff !important;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.35);
+  border: 1px solid rgb(255 255 255 / 0.18) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    inset 0 -8px 16px rgb(0 0 0 / 0.14),
+    0 8px 22px -8px var(--ng-btn-glow, rgb(0 0 0 / 0.5)) !important;
+}
+.fi-btn-danger, .fi-btn[class*="danger"]   { --ng-btn-glow: rgb(244 63 94 / 0.75);  background: linear-gradient(135deg, #fb7185, #e11d48) !important; border-color: rgb(251 113 133 / 0.4) !important; }
+.fi-btn-success, .fi-btn[class*="success"] { --ng-btn-glow: rgb(16 185 129 / 0.7); background: linear-gradient(135deg, #34d399, #059669) !important; border-color: rgb(52 211 153 / 0.4) !important; }
+.fi-btn-warning, .fi-btn[class*="warning"] { --ng-btn-glow: rgb(245 158 11 / 0.7); background: linear-gradient(135deg, #fbbf24, #d97706) !important; border-color: rgb(251 191 36 / 0.4) !important; }
+.fi-btn-info, .fi-btn[class*="info"]       { --ng-btn-glow: rgb(56 189 248 / 0.7); background: linear-gradient(135deg, #38bdf8, #0284c7) !important; border-color: rgb(56 189 248 / 0.4) !important; }
+.fi-btn-danger:hover, .fi-btn-success:hover, .fi-btn-warning:hover, .fi-btn-info:hover { filter: brightness(1.08) saturate(1.1); }
+
+/* Disabled: dimmed but still clearly a button */
+.fi-btn[disabled], .fi-btn.fi-disabled, .fi-btn[aria-disabled="true"] {
+  opacity: 0.5 !important; filter: saturate(0.7); cursor: not-allowed; box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2) !important;
+}
+.fi-btn .fi-icon, .fi-btn svg { flex-shrink: 0; }
+
+/* ─── 4.0.5+: power buttons (Start / Restart / Kill) — premium liquid glass ── */
+.fi-btn-group .fi-btn, .fi-ac-btn-group .fi-btn {
+  position: relative;
+  min-height: 2.6rem;
+  padding-inline: 1.35rem !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  text-shadow: none !important;
+  outline: 0 !important;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+          backdrop-filter: blur(18px) saturate(180%);
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    border-color 0.2s ease,
+    background 0.25s ease,
+    filter 0.2s ease !important;
+}
+/* subtle top specular highlight on every power pill */
+.fi-btn-group .fi-btn::before, .fi-ac-btn-group .fi-btn::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.22) 0%, transparent 42%);
+  opacity: 0.9;
+  z-index: 0;
+}
+.fi-btn-group .fi-btn > *, .fi-ac-btn-group .fi-btn > * { position: relative; z-index: 1; }
+
+.fi-btn-group .fi-btn:hover:not([disabled]), .fi-ac-btn-group .fi-btn:hover:not([disabled]) {
+  transform: translateY(-2px);
+  filter: none;
+}
+.fi-btn-group .fi-btn:active:not([disabled]) { transform: translateY(0) scale(0.965); }
+.fi-btn-group .fi-btn :is(.fi-btn-label, span, svg, .fi-icon) {
+  color: inherit !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* ── Start → emerald liquid glass ─────────────────────────────────────────── */
+.fi-btn-group .fi-btn-primary,
+.fi-btn-group .fi-btn[class*="primary"],
+.fi-btn-group .fi-btn-success {
+  color: #6ee7b7 !important;
+  background:
+    linear-gradient(160deg, rgb(52 211 153 / 0.42) 0%, rgb(16 185 129 / 0.14) 55%, rgb(6 95 70 / 0.18) 100%) !important;
+  border: 1px solid rgb(110 231 183 / 0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.45),
+    inset 0 -10px 18px rgb(6 78 59 / 0.18),
+    0 0 0 1px rgb(52 211 153 / 0.12),
+    0 4px 18px -4px rgb(16 185 129 / 0.55),
+    0 0 28px -6px rgb(52 211 153 / 0.5) !important;
+}
+.fi-btn-group .fi-btn-primary:hover:not([disabled]),
+.fi-btn-group .fi-btn-success:hover:not([disabled]) {
+  color: #a7f3d0 !important;
+  border-color: rgb(167 243 208 / 0.9) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.55),
+    inset 0 -10px 18px rgb(6 78 59 / 0.12),
+    0 0 0 1px rgb(52 211 153 / 0.25),
+    0 6px 22px -4px rgb(16 185 129 / 0.7),
+    0 0 36px -2px rgb(52 211 153 / 0.7) !important;
+}
+
+/* ── Restart → cool cyan-slate glass (no longer plain white outline) ─────── */
+.fi-btn-group .fi-btn-gray, .fi-btn-group .fi-btn[class*="gray"] {
+  color: #c7d2fe !important;
+  background:
+    linear-gradient(160deg, rgb(165 180 252 / 0.18) 0%, rgb(99 102 241 / 0.06) 50%, rgb(15 23 42 / 0.22) 100%) !important;
+  border: 1px solid rgb(165 180 252 / 0.28) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    inset 0 -10px 18px rgb(15 23 42 / 0.25),
+    0 0 0 1px rgb(99 102 241 / 0.08),
+    0 4px 16px -6px rgb(0 0 0 / 0.55) !important;
+}
+.fi-btn-group .fi-btn-gray:hover:not([disabled]),
+.fi-btn-group .fi-btn[class*="gray"]:hover:not([disabled]) {
+  color: #e0e7ff !important;
+  border-color: rgb(199 210 254 / 0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.4),
+    inset 0 -10px 18px rgb(15 23 42 / 0.18),
+    0 0 0 1px rgb(129 140 248 / 0.2),
+    0 6px 20px -4px rgb(99 102 241 / 0.35),
+    0 0 28px -4px rgb(99 102 241 / 0.4) !important;
+}
+
+/* ── Kill / Stop → rose liquid glass ─────────────────────────────────────── */
+.fi-btn-group .fi-btn-danger, .fi-btn-group .fi-btn[class*="danger"] {
+  color: #fda4af !important;
+  background:
+    linear-gradient(160deg, rgb(251 113 133 / 0.4) 0%, rgb(225 29 72 / 0.14) 55%, rgb(136 19 55 / 0.2) 100%) !important;
+  border: 1px solid rgb(251 113 133 / 0.52) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.4),
+    inset 0 -10px 18px rgb(136 19 55 / 0.2),
+    0 0 0 1px rgb(244 63 94 / 0.12),
+    0 4px 18px -4px rgb(225 29 72 / 0.5),
+    0 0 28px -6px rgb(251 113 133 / 0.5) !important;
+}
+.fi-btn-group .fi-btn-danger:hover:not([disabled]) {
+  color: #fecdd3 !important;
+  border-color: rgb(253 164 175 / 0.9) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.5),
+    inset 0 -10px 18px rgb(136 19 55 / 0.12),
+    0 0 0 1px rgb(244 63 94 / 0.25),
+    0 6px 22px -4px rgb(225 29 72 / 0.65),
+    0 0 36px -2px rgb(251 113 133 / 0.7) !important;
+}
+
+/* Disabled: faded glass, no glow */
+.fi-btn-group .fi-btn[disabled],
+.fi-btn-group .fi-btn.fi-disabled,
+.fi-btn-group .fi-btn[aria-disabled="true"] {
+  opacity: 0.4 !important;
+  filter: saturate(0.45) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
+  transform: none !important;
+}
+
+/* Light mode: higher contrast labels + softer glass */
+html:not(.dark) .fi-btn-group .fi-btn-primary,
+html:not(.dark) .fi-btn-group .fi-btn-success {
+  color: #047857 !important;
+  background: linear-gradient(160deg, rgb(52 211 153 / 0.35), rgb(255 255 255 / 0.72)) !important;
+  border-color: rgb(16 185 129 / 0.45) !important;
+}
+html:not(.dark) .fi-btn-group .fi-btn-danger {
+  color: #be123c !important;
+  background: linear-gradient(160deg, rgb(251 113 133 / 0.32), rgb(255 255 255 / 0.72)) !important;
+  border-color: rgb(244 63 94 / 0.4) !important;
+}
+html:not(.dark) .fi-btn-group .fi-btn-gray {
+  color: #3730a3 !important;
+  background: linear-gradient(160deg, rgb(199 210 254 / 0.45), rgb(255 255 255 / 0.8)) !important;
+  border-color: rgb(129 140 248 / 0.4) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4.0.5+: Admin forms, resources & panels — liquid glass (no flat black)
+   Matches the panel chrome so settings / create / edit pages don't look void.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Page shell: soft indigo wash instead of pure black */
+.fi-page, .fi-main, .fi-main-ctn, .fi-resource-edit-record-page,
+.fi-resource-create-record-page, .fi-simple-page, .fi-page-content {
+  background: transparent !important;
+}
+
+/* ─── Sections / cards on forms ───────────────────────────────────────────── */
+.fi-section, .fi-fo-component-ctn > .fi-section,
+.fi-resource-relation-managers .fi-section,
+.fi-sc-section, .fi-fieldset {
+  background:
+    linear-gradient(160deg, rgb(180 190 255 / 0.06), transparent 50%),
+    rgb(14 16 42 / 0.72) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: var(--ng-lg-radius) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-spec),
+    0 12px 36px -18px rgb(0 0 0 / 0.55) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+          backdrop-filter: blur(18px) saturate(150%);
+}
+html:not(.dark) .fi-section,
+html:not(.dark) .fi-sc-section,
+html:not(.dark) .fi-fieldset {
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.55), rgb(230 235 255 / 0.35)),
+    rgb(255 255 255 / 0.7) !important;
+}
+.fi-section-content, .fi-section-content-ctn,
+.fi-sc-section-content, .fi-fieldset-content {
+  background: transparent !important;
+}
+.fi-section-header, .fi-sc-section-header {
+  background: rgb(0 0 0 / 0.12) !important;
+  border-bottom: 1px solid var(--lg-stroke) !important;
+  border-radius: var(--ng-lg-radius) var(--ng-lg-radius) 0 0 !important;
+}
+
+/* Nested relation tables / empty relation cards */
+.fi-resource-relation-managers,
+.fi-ta-ctn, .fi-ta {
+  background:
+    linear-gradient(160deg, rgb(180 190 255 / 0.04), transparent 55%),
+    rgb(12 14 36 / 0.55) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: calc(var(--ng-lg-radius) - 0.15rem) !important;
+}
+
+/* ─── Inputs, selects, textareas — glass wells (not pure black) ───────────── */
+.fi-input-wrp,
+.fi-select-input,
+.fi-ta-search-field,
+.fi-fo-field-wrp .fi-input-wrp,
+.fi-fo-field-wrp input:not([type="checkbox"]):not([type="radio"]),
+.fi-fo-field-wrp select,
+.fi-fo-field-wrp textarea,
+.fi-input,
+input.fi-input,
+textarea.fi-textarea,
+select.fi-select-input {
+  background:
+    linear-gradient(180deg, rgb(180 190 255 / 0.05), transparent 40%),
+    rgb(8 10 28 / 0.55) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: 0.85rem !important;
+  color: rgb(var(--ng-text)) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(200 210 255 / 0.06),
+    inset 0 2px 8px rgb(0 0 0 / 0.28) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+}
+html:not(.dark) .fi-input-wrp,
+html:not(.dark) .fi-select-input,
+html:not(.dark) .fi-fo-field-wrp input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) .fi-fo-field-wrp select,
+html:not(.dark) .fi-fo-field-wrp textarea {
+  background: rgb(255 255 255 / 0.65) !important;
+  color: rgb(var(--ng-text)) !important;
+  box-shadow: inset 0 1px 3px rgb(60 72 150 / 0.1) !important;
+}
+.fi-input-wrp:focus-within,
+.fi-select-input:focus-within,
+.fi-fo-field-wrp input:focus,
+.fi-fo-field-wrp select:focus,
+.fi-fo-field-wrp textarea:focus,
+.fi-input:focus,
+textarea.fi-textarea:focus {
+  border-color: rgb(var(--ng-accent) / 0.7) !important;
+  box-shadow:
+    0 0 0 3px rgb(var(--ng-accent) / 0.18),
+    0 0 24px -4px rgb(var(--ng-accent) / 0.45),
+    inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.12) !important;
+  outline: none !important;
+}
+/* Prefix / suffix icons inside inputs */
+.fi-input-wrp .fi-icon, .fi-input-wrp svg {
+  color: rgb(var(--ng-text-muted)) !important;
+  opacity: 0.85;
+}
+.fi-input-wrp:focus-within .fi-icon,
+.fi-input-wrp:focus-within svg {
+  color: rgb(var(--ng-accent-soft)) !important;
+}
+
+/* Labels */
+.fi-fo-field-wrp-label, .fi-fo-field-wrp label,
+.fi-label, label.fi-fo-field-wrp-label {
+  color: rgb(var(--ng-text)) !important;
+  font-weight: 550 !important;
+  letter-spacing: -0.01em;
+}
+.fi-fo-field-wrp-helper-text, .fi-fo-field-wrp .text-sm,
+.fi-fo-field-wrp-hint {
+  color: rgb(var(--ng-text-muted)) !important;
+}
+
+/* ─── Page / resource tabs (Account, Information, Egg, …) ─────────────────── */
+.fi-page-sub-navigation-tabs,
+.fi-resource-tabs,
+.fi-tabs.fi-contained,
+nav.fi-tabs,
+.fi-fo-tabs {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.35rem !important;
+  padding: 0.35rem !important;
+  background:
+    linear-gradient(145deg, var(--lg-fill-a), var(--lg-fill-b)),
+    rgb(10 12 32 / 0.55) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: 999px !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+          backdrop-filter: blur(14px) saturate(150%);
+  width: fit-content !important;
+  max-width: 100%;
+}
+.fi-tabs-item, .fi-fo-tabs-item,
+.fi-page-sub-navigation-tabs a,
+.fi-page-sub-navigation-tabs button {
+  border-radius: 999px !important;
+  border: 0 !important;
+  border-bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0.45rem 0.95rem !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  background: transparent !important;
+  font-weight: 550 !important;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.fi-tabs-item:hover, .fi-fo-tabs-item:hover,
+.fi-page-sub-navigation-tabs a:hover {
+  color: rgb(var(--ng-text)) !important;
+  background: rgb(var(--ng-accent) / 0.1) !important;
+}
+.fi-tabs-item-active, .fi-fo-tabs-item-active,
+.fi-tabs-item[aria-selected="true"],
+.fi-page-sub-navigation-tabs a[aria-current="page"],
+.fi-page-sub-navigation-tabs [data-active="true"] {
+  color: rgb(var(--ng-text)) !important;
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.32), rgb(var(--ng-accent-2) / 0.2)) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.25), 0 0 18px -4px rgb(var(--ng-accent) / 0.5) !important;
+}
+
+/* Wizard steps (Create Server / Create Node) */
+.fi-wizard-header, .fi-fo-wizard-header,
+ol.fi-wizard-header {
+  background:
+    linear-gradient(145deg, var(--lg-fill-a), var(--lg-fill-b)),
+    rgb(12 14 36 / 0.6) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: 999px !important;
+  padding: 0.4rem 0.6rem !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec) !important;
+}
+.fi-wizard-header-step-label,
+.fi-fo-wizard-header-step {
+  color: rgb(var(--ng-text-muted)) !important;
+}
+.fi-wizard-header-step-completed .fi-wizard-header-step-label,
+.fi-wizard-header-step-active .fi-wizard-header-step-label {
+  color: rgb(var(--ng-text)) !important;
+}
+
+/* ─── Toggle buttons (Unlimited / Limited, Yes / No, …) ───────────────────── */
+.fi-fo-toggle-buttons, .fi-toggle-buttons,
+.fi-fo-field-wrp [role="group"],
+.fi-btn-group:not(.fi-ac-btn-group) {
+  display: inline-flex !important;
+  flex-wrap: wrap;
+  gap: 0.4rem !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.fi-fo-toggle-buttons .fi-btn,
+.fi-toggle-buttons .fi-btn,
+.fi-fo-field-wrp [role="group"] .fi-btn {
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  min-height: 2.15rem;
+  padding-inline: 0.95rem !important;
+  border: 1px solid var(--lg-stroke) !important;
+  background: linear-gradient(145deg, rgb(180 190 255 / 0.1), rgb(12 14 38 / 0.35)) !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec) !important;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease !important;
+}
+.fi-fo-toggle-buttons .fi-btn:hover,
+.fi-toggle-buttons .fi-btn:hover {
+  color: rgb(var(--ng-text)) !important;
+  border-color: rgb(var(--ng-accent) / 0.45) !important;
+}
+/* Selected state — neon glass */
+.fi-fo-toggle-buttons .fi-btn[aria-pressed="true"],
+.fi-fo-toggle-buttons .fi-btn.fi-selected,
+.fi-toggle-buttons .fi-btn[aria-pressed="true"],
+.fi-fo-field-wrp [role="group"] .fi-btn[aria-pressed="true"],
+.fi-fo-toggle-buttons input:checked + label,
+.fi-fo-toggle-buttons .fi-btn-primary {
+  color: #fff !important;
+  border-color: rgb(var(--ng-accent-soft) / 0.55) !important;
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.85), rgb(var(--ng-accent-2) / 0.7)) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    0 0 20px -4px rgb(var(--ng-accent) / 0.65) !important;
+}
+
+/* Toggle switches */
+.fi-toggle, .fi-fo-toggle {
+  --tw-ring-color: rgb(var(--ng-accent) / 0.35);
+}
+.fi-toggle button[aria-checked="true"],
+.fi-fo-toggle button[aria-checked="true"],
+button.fi-toggle[aria-checked="true"] {
+  background: linear-gradient(135deg, rgb(var(--ng-accent)), rgb(var(--ng-accent-2))) !important;
+  box-shadow: 0 0 14px -2px rgb(var(--ng-accent) / 0.55) !important;
+}
+.fi-toggle button[aria-checked="false"],
+.fi-fo-toggle button[aria-checked="false"] {
+  background: rgb(40 45 80 / 0.7) !important;
+  border: 1px solid var(--lg-stroke) !important;
+}
+
+/* Checkboxes */
+.fi-checkbox, .fi-fo-checkbox input[type="checkbox"],
+input[type="checkbox"].fi-checkbox-input {
+  border-radius: 0.4rem !important;
+  border-color: var(--lg-stroke) !important;
+  background: rgb(8 10 28 / 0.5) !important;
+}
+.fi-checkbox:checked, .fi-fo-checkbox input:checked,
+input[type="checkbox"].fi-checkbox-input:checked {
+  background-color: rgb(var(--ng-accent)) !important;
+  border-color: rgb(var(--ng-accent-soft)) !important;
+}
+
+/* ─── Code / config.yml blocks ────────────────────────────────────────────── */
+.fi-fo-code-editor, .fi-code-editor,
+pre.fi-code, .fi-fo-placeholder,
+.cm-editor, .cm-gutters {
+  background: rgb(6 8 22 / 0.75) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: 1rem !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec) !important;
+}
+
+/* ─── Empty states ────────────────────────────────────────────────────────── */
+.fi-empty-state {
+  background: transparent !important;
+  color: rgb(var(--ng-text-muted)) !important;
+}
+.fi-empty-state-icon {
+  color: rgb(var(--ng-accent-soft) / 0.7) !important;
+}
+
+/* ─── File upload / avatar dropzone — solid glass, no dashed lines ────────── */
+.fi-fo-file-upload,
+.fi-file-upload,
+.fi-fo-file-upload-label,
+.fi-fo-file-upload-input-ctn,
+.filepond--root,
+.filepond--panel-root,
+.filepond--drip,
+.filepond--drop-label,
+[data-field-wrapper] .filepond--root,
+.fi-fo-field-wrp .fi-fo-file-upload {
+  background:
+    linear-gradient(160deg, rgb(180 190 255 / 0.08), transparent 55%),
+    rgb(14 16 42 / 0.5) !important;
+  border: 1px solid rgb(140 155 230 / 0.22) !important;
+  border-style: solid !important;
+  border-radius: 1.15rem !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  box-shadow: inset 0 1px 0 rgb(200 210 255 / 0.1) !important;
+  outline: none !important;
+}
+/* Kill FilePond / Filament dashed outlines and dotted helpers */
+.filepond--panel-root,
+.filepond--panel,
+.filepond--drip,
+.filepond--drop-label {
+  border-style: solid !important;
+  border-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.filepond--drop-label,
+.filepond--label-action,
+.fi-fo-file-upload-label,
+.fi-fo-file-upload button,
+.fi-fo-file-upload a {
+  color: rgb(var(--ng-text-muted)) !important;
+}
+/* Compact “Browse” chip inside the well */
+.fi-fo-file-upload label,
+.fi-fo-file-upload .filepond--label-action,
+.filepond--drop-label label {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 2.6rem;
+  padding: 0.55rem 1rem !important;
+  border-radius: 0.9rem !important;
+  border: 1px solid rgb(140 155 230 / 0.28) !important;
+  background:
+    linear-gradient(145deg, rgb(180 190 255 / 0.12), rgb(12 14 40 / 0.35)) !important;
+  color: rgb(var(--ng-text)) !important;
+  box-shadow: inset 0 1px 0 rgb(200 210 255 / 0.12) !important;
+  cursor: pointer;
+}
+.fi-fo-file-upload:hover,
+.fi-file-upload:hover,
+.filepond--root:hover {
+  border-color: rgb(var(--ng-accent) / 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(200 210 255 / 0.14),
+    0 0 22px -6px rgb(var(--ng-accent) / 0.35) !important;
+}
+html:not(.dark) .fi-fo-file-upload,
+html:not(.dark) .fi-file-upload,
+html:not(.dark) .filepond--root {
+  background: rgb(255 255 255 / 0.55) !important;
+  border: 1px solid rgb(130 142 210 / 0.3) !important;
+  border-style: solid !important;
+}
+
+/* ─── Health cards / stats rows ───────────────────────────────────────────── */
+.fi-wi-stats-overview-stat,
+.fi-in-entry, .fi-in-repeatable-item {
+  background:
+    linear-gradient(145deg, var(--lg-fill-a), var(--lg-fill-b)),
+    rgb(14 16 42 / 0.65) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: 1rem !important;
+  box-shadow: inset 0 1px 0 var(--lg-spec) !important;
+}
+
+/* ─── OAuth / accordion rows (Settings → OAuth) ───────────────────────────── */
+.fi-fo-repeater-item, .fi-repeater-item,
+.fi-fo-builder-item, .fi-collapse,
+details.fi-section, .fi-accordion-item {
+  background:
+    linear-gradient(145deg, var(--lg-fill-a), transparent),
+    rgb(12 14 36 / 0.55) !important;
+  border: 1px solid var(--lg-stroke) !important;
+  border-radius: 0.95rem !important;
+}
+
+/* ─── Page header actions (trash / save icons) ────────────────────────────── */
+.fi-page-header-actions .fi-btn,
+.fi-header-actions .fi-btn {
+  border-radius: 999px !important;
+}
+
+/* ─── Relation manager footer chips (Subdomains / Allocations) ────────────── */
+.fi-resource-relation-managers .fi-tabs,
+.fi-page-content .fi-tabs.fi-contained {
+  margin-inline: auto;
+}
+
+/* ─── Slider (diagnostics lines) ──────────────────────────────────────────── */
+input[type="range"], .fi-fo-slider input[type="range"] {
+  accent-color: rgb(var(--ng-accent));
+}
+
+/* ─── Select dropdown panels already handled; ensure option list is opaque ── */
+.fi-select-input-list, .fi-dropdown-panel {
+  background: rgb(14 16 42 / 0.96) !important;
+}
+
+/* ─── Placeholder text ────────────────────────────────────────────────────── */
+.fi-input::placeholder, input::placeholder, textarea::placeholder {
+  color: rgb(var(--ng-text-subtle)) !important;
+  opacity: 0.75;
+}
+
+/* ─── Disabled fields ─────────────────────────────────────────────────────── */
+.fi-input-wrp:has(input:disabled),
+.fi-input:disabled, input:disabled, textarea:disabled, select:disabled {
+  opacity: 0.55 !important;
+  filter: saturate(0.7);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Kill pure-black voids — force indigo glass atmosphere on every admin page
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Root canvas: deep navy, never #000 / zinc-950 */
+html.dark,
+html.dark body,
+html.dark .fi-body,
+[data-theme="dark"] {
+  --ng-bg: 8 10 28 !important;
+  --ng-bg-elevated: 14 16 42 !important;
+  --ng-surface: 20 24 56 !important;
+  --ng-surface-2: 30 36 78 !important;
+  --ng-surface-3: 42 50 100 !important;
+  /* Filament / Tailwind gray scale overrides (prevent gray-950 voids) */
+  --gray-950: 8 10 28;
+  --gray-900: 12 14 36;
+  --gray-800: 22 26 58;
+  --gray-700: 36 42 88;
+  --gray-600: 55 62 120;
+  --color-gray-950: 8 10 28;
+  --color-gray-900: 12 14 36;
+  --color-gray-800: 22 26 58;
+}
+
+html.dark,
+html.dark body {
+  background-color: rgb(8 10 28) !important;
+  background-image:
+    radial-gradient(ellipse 90% 60% at 15% -10%, rgb(var(--ng-accent) / 0.28), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 90% 110%, rgb(var(--ng-accent-2) / 0.22), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 70% 20%, rgb(var(--ng-accent-soft) / 0.1), transparent 60%),
+    linear-gradient(180deg, rgb(10 12 34), rgb(6 8 22)) !important;
+  background-attachment: fixed !important;
+}
+
+/* Atmosphere layer stronger */
+#ng-bg {
+  z-index: 0 !important;
+  background: transparent !important;
+}
+.fi-layout, .fi-body, .fi-main, .fi-main-ctn, .fi-page,
+.fi-resource-edit-record-page, .fi-resource-create-record-page,
+.fi-simple-page, .fi-page-content, .fi-main > * {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+/* Content sits above atmosphere */
+.fi-layout { position: relative; z-index: 1; }
+
+/* Boost orbs so the page never reads as flat black */
+.ng-aurora { opacity: 1 !important; }
+.ng-orb--1 {
+  background: radial-gradient(circle at 40% 40%, rgb(var(--ng-accent) / 0.7), rgb(var(--ng-accent) / 0) 66%) !important;
+}
+.ng-orb--2 {
+  background: radial-gradient(circle at 55% 55%, rgb(var(--ng-accent-2) / 0.6), rgb(var(--ng-accent-2) / 0) 66%) !important;
+}
+.ng-orb--3 {
+  background: radial-gradient(circle, rgb(var(--ng-accent-soft) / 0.4), rgb(var(--ng-accent-soft) / 0) 68%) !important;
+}
+
+/* Sections / cards — always translucent glass, never solid black */
+html.dark .fi-section,
+html.dark .fi-sc-section,
+html.dark .fi-fieldset,
+html.dark .fi-ta-ctn,
+html.dark .fi-ta,
+html.dark .fi-simple-card,
+html.dark .fi-wi-stats-overview-stat,
+html.dark .fi-in-entry,
+html.dark .fi-resource-relation-managers .fi-section,
+html.dark .fi-fo-repeater-item,
+html.dark .fi-accordion-item,
+html.dark .fi-collapse {
+  background:
+    linear-gradient(155deg, rgb(180 190 255 / 0.1), rgb(100 120 220 / 0.03) 55%, transparent),
+    rgb(16 18 48 / 0.55) !important;
+  border: 1px solid rgb(140 155 230 / 0.22) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+          backdrop-filter: blur(18px) saturate(160%) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(200 210 255 / 0.14),
+    0 14px 40px -18px rgb(0 0 20 / 0.6) !important;
+}
+
+/* Inputs — glass wells tinted indigo, not #000 */
+html.dark .fi-input-wrp,
+html.dark .fi-select-input,
+html.dark .fi-ta-search-field,
+html.dark .fi-fo-field-wrp .fi-input-wrp,
+html.dark .fi-fo-field-wrp input:not([type="checkbox"]):not([type="radio"]),
+html.dark .fi-fo-field-wrp select,
+html.dark .fi-fo-field-wrp textarea,
+html.dark input.fi-input,
+html.dark textarea.fi-textarea,
+html.dark .fi-input {
+  background:
+    linear-gradient(180deg, rgb(160 175 255 / 0.07), transparent 45%),
+    rgb(10 12 34 / 0.45) !important;
+  border: 1px solid rgb(140 155 230 / 0.22) !important;
+  color: rgb(240 242 255) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(200 210 255 / 0.08),
+    inset 0 2px 10px rgb(0 0 20 / 0.35) !important;
+}
+html.dark .fi-input-wrp:focus-within,
+html.dark .fi-select-input:focus-within,
+html.dark .fi-fo-field-wrp input:focus,
+html.dark .fi-fo-field-wrp select:focus,
+html.dark .fi-fo-field-wrp textarea:focus {
+  border-color: rgb(var(--ng-accent) / 0.75) !important;
+  background:
+    linear-gradient(180deg, rgb(var(--ng-accent) / 0.08), transparent 50%),
+    rgb(12 14 40 / 0.55) !important;
+  box-shadow:
+    0 0 0 3px rgb(var(--ng-accent) / 0.2),
+    0 0 28px -4px rgb(var(--ng-accent) / 0.45),
+    inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.15) !important;
+}
+
+/* Tabs bar glass */
+html.dark .fi-tabs,
+html.dark .fi-fo-tabs,
+html.dark .fi-page-sub-navigation-tabs,
+html.dark nav.fi-tabs {
+  background:
+    linear-gradient(145deg, rgb(180 190 255 / 0.1), rgb(12 14 40 / 0.4)) !important;
+  border: 1px solid rgb(140 155 230 / 0.22) !important;
+}
+
+/* Kill Tailwind bg-gray-950 / bg-zinc-950 / bg-black on common Filament shells */
+html.dark .bg-gray-950,
+html.dark .bg-zinc-950,
+html.dark .bg-neutral-950,
+html.dark .bg-black,
+html.dark .dark\:bg-gray-950,
+html.dark .dark\:bg-zinc-950,
+html.dark [class*="bg-gray-950"],
+html.dark [class*="bg-zinc-950"] {
+  background-color: rgb(12 14 36 / 0.65) !important;
+}
+
+/* Code blocks still readable but not pure black */
+html.dark .fi-fo-code-editor,
+html.dark .cm-editor,
+html.dark .cm-gutters,
+html.dark pre {
+  background: rgb(8 10 28 / 0.7) !important;
+  border-color: rgb(140 155 230 / 0.2) !important;
+}
+
+/* Sidebar / topbar already glass — reinforce transparency of main pane */
+html.dark .fi-main-ctn,
+html.dark .fi-page > section,
+html.dark .fi-page > div {
+  background: transparent !important;
+}
+
+/* Avatar / file upload: never show dashed borders */
+html .fi-fo-file-upload,
+html .fi-file-upload,
+html .filepond--root,
+html .filepond--panel-root,
+html .fi-fo-file-upload-input-ctn,
+html .fi-fo-field-wrp:has(.fi-fo-file-upload) > div,
+html .fi-fo-field-wrp:has(input[type="file"]) .fi-input-wrp {
+  border-style: solid !important;
+  border-image: none !important;
+  background-image: none !important;
+}
+html .fi-fo-file-upload,
+html .fi-file-upload,
+html .filepond--root {
+  border: 1px solid rgb(140 155 230 / 0.24) !important;
+  border-radius: 1.15rem !important;
+  min-height: 3.25rem;
+}
+html .filepond--drip-blob,
+html .filepond--drip {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Avatar / file upload — clean centered glass well
+   ═══════════════════════════════════════════════════════════════════════════ */
+html .fi-fo-file-upload,
+html .fi-file-upload,
+html .filepond--root,
+html .fi-fo-file-upload-input-ctn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  min-height: 4.5rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0.85rem 1.15rem !important;
+  margin: 0 !important;
+  border: 1px solid rgb(140 155 230 / 0.26) !important;
+  border-style: solid !important;
+  border-radius: 1.15rem !important;
+  background:
+    linear-gradient(160deg, rgb(180 190 255 / 0.09), transparent 60%),
+    rgb(14 16 42 / 0.48) !important;
+  box-shadow: inset 0 1px 0 rgb(200 210 255 / 0.1) !important;
+  overflow: hidden !important;
+}
+
+/* Center FilePond internals */
+html .filepond--root .filepond--drop-label,
+html .filepond--drop-label,
+html .filepond--panel,
+html .filepond--panel-root {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+html .filepond--drop-label label,
+html .filepond--label-action,
+html .fi-fo-file-upload label,
+html .fi-fo-file-upload-label,
+html .fi-file-upload label {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.2rem !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0.35rem 0.5rem !important;
+  text-align: center !important;
+  font-size: 0.84rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: -0.01em;
+  color: rgb(var(--ng-text-muted)) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+
+/* “Browse” link accent, still centered */
+html .filepond--label-action,
+html .fi-fo-file-upload a,
+html .fi-file-upload a {
+  display: inline !important;
+  color: rgb(var(--ng-accent-soft)) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+html .filepond--label-action:hover,
+html .fi-fo-file-upload a:hover {
+  color: rgb(var(--ng-accent)) !important;
+  text-decoration: underline !important;
+}
+
+/* Hide FilePond decorative drip / grid lines */
+html .filepond--drip,
+html .filepond--drip-blob,
+html .filepond--credits {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hover state — soft accent, still centered */
+html .fi-fo-file-upload:hover,
+html .fi-file-upload:hover,
+html .filepond--root:hover {
+  border-color: rgb(var(--ng-accent) / 0.5) !important;
+  background:
+    linear-gradient(160deg, rgb(var(--ng-accent) / 0.1), transparent 60%),
+    rgb(16 18 48 / 0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(200 210 255 / 0.14),
+    0 0 24px -8px rgb(var(--ng-accent) / 0.4) !important;
+}
+
+/* Native file input fallback (if not FilePond) */
+html .fi-fo-field-wrp:has(input[type="file"]) .fi-input-wrp,
+html input[type="file"] {
+  text-align: center !important;
+}
+html input[type="file"]::file-selector-button {
+  margin-inline-end: 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgb(140 155 230 / 0.3);
+  background: linear-gradient(145deg, rgb(180 190 255 / 0.14), rgb(12 14 40 / 0.4));
+  color: rgb(var(--ng-text));
+  padding: 0.35rem 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+html:not(.dark) .fi-fo-file-upload,
+html:not(.dark) .fi-file-upload,
+html:not(.dark) .filepond--root {
+  background: rgb(255 255 255 / 0.6) !important;
+  border: 1px solid rgb(130 142 210 / 0.28) !important;
+  color: rgb(var(--ng-text-muted)) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Avatar dropzone FINAL — single-line centered label, full-width glass bar
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Outer field: full-width glass bar */
+html .fi-fo-field-wrp:has(.fi-fo-file-upload) .fi-fo-file-upload,
+html .fi-fo-field-wrp:has(input[type="file"]) .fi-fo-file-upload,
+html .fi-fo-file-upload,
+html .fi-file-upload,
+html .filepond--root {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 3.1rem !important;
+  height: auto !important;
+  padding: 0.55rem 1rem !important;
+  border: 1px solid rgb(140 155 230 / 0.28) !important;
+  border-style: solid !important;
+  border-radius: 0.95rem !important;
+  background:
+    linear-gradient(180deg, rgb(180 190 255 / 0.08), transparent 55%),
+    rgb(12 14 36 / 0.42) !important;
+  box-shadow: inset 0 1px 0 rgb(200 210 255 / 0.08) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* FilePond root must fill the bar */
+html .filepond--root {
+  height: 3.1rem !important;
+  min-height: 3.1rem !important;
+  max-height: 3.1rem !important;
+}
+html .filepond--root .filepond--drop-label,
+html .filepond--drop-label {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 1rem !important;
+  transform: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+/* Label text on ONE horizontal line, centered */
+html .filepond--drop-label label,
+html .fi-fo-file-upload label,
+html .fi-fo-file-upload-label,
+html .fi-file-upload label {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  color: rgb(var(--ng-text-muted)) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+}
+
+/* “Browse” as a small pill next to the text */
+html .filepond--label-action,
+html .fi-fo-file-upload .filepond--label-action,
+html .fi-fo-file-upload a.filepond--label-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: 0.25rem !important;
+  padding: 0.2rem 0.7rem !important;
+  border-radius: 999px !important;
+  border: 1px solid rgb(var(--ng-accent) / 0.4) !important;
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.25), rgb(var(--ng-accent-2) / 0.15)) !important;
+  color: rgb(var(--ng-text)) !important;
+  font-weight: 600 !important;
+  font-size: 0.78rem !important;
+  text-decoration: none !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12) !important;
+  white-space: nowrap !important;
+}
+html .filepond--label-action:hover {
+  border-color: rgb(var(--ng-accent) / 0.7) !important;
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.4), rgb(var(--ng-accent-2) / 0.25)) !important;
+}
+
+/* Hide extra FilePond chrome that breaks the layout */
+html .filepond--panel,
+html .filepond--panel-root,
+html .filepond--drip,
+html .filepond--drip-blob,
+html .filepond--credits,
+html .filepond--list-scroller {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* When a file is already present, let the list show */
+html .filepond--root:has(.filepond--item) {
+  height: auto !important;
+  max-height: none !important;
+  min-height: 3.1rem !important;
+}
+html .filepond--root:has(.filepond--item) .filepond--list-scroller {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  height: auto !important;
+  width: 100% !important;
+  overflow: visible !important;
+}
+html .filepond--root:has(.filepond--item) .filepond--panel,
+html .filepond--root:has(.filepond--item) .filepond--panel-root {
+  display: block !important;
+  opacity: 1 !important;
+  height: auto !important;
+  width: 100% !important;
+}
+
+html .fi-fo-file-upload:hover,
+html .filepond--root:hover {
+  border-color: rgb(var(--ng-accent) / 0.5) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(200 210 255 / 0.12),
+    0 0 20px -6px rgb(var(--ng-accent) / 0.35) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   File upload — ONE glass shell (kill nested double borders)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Collapse every nested wrapper into a single visual bar */
+html .fi-fo-file-upload,
+html .fi-file-upload,
+html .fi-fo-file-upload-input-ctn,
+html .filepond--root,
+html .fi-fo-field-wrp:has(.fi-fo-file-upload) > .fi-fo-field-wrp-content,
+html .fi-fo-field-wrp:has(input[type="file"]) .fi-input-wrp {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  border-radius: 0 !important;
+}
+
+/* The only visible shell — applied on the outermost upload component */
+html .fi-fo-file-upload,
+html .fi-file-upload {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 3rem !important;
+  padding: 0 !important;
+  border: 1px solid rgb(140 155 230 / 0.28) !important;
+  border-radius: 0.95rem !important;
+  background:
+    linear-gradient(180deg, rgb(180 190 255 / 0.08), transparent 60%),
+    rgb(12 14 36 / 0.45) !important;
+  box-shadow: inset 0 1px 0 rgb(200 210 255 / 0.1) !important;
+  overflow: hidden !important;
+}
+
+html .filepond--root {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 3rem !important;
+  min-height: 3rem !important;
+  max-height: 3rem !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Drop label fills the single shell, centered, no extra box */
+html .filepond--drop-label,
+html .filepond--root .filepond--drop-label {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  margin: 0 !important;
+  padding: 0 1rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  white-space: nowrap !important;
+}
+
+html .filepond--drop-label label,
+html .fi-fo-file-upload label {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: rgb(var(--ng-text-muted)) !important;
+}
+
+html .filepond--label-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.18rem 0.65rem !important;
+  border-radius: 999px !important;
+  border: 1px solid rgb(var(--ng-accent) / 0.4) !important;
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.28), rgb(var(--ng-accent-2) / 0.16)) !important;
+  color: rgb(var(--ng-text)) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+/* Hide all FilePond chrome that draws extra frames */
+html .filepond--panel,
+html .filepond--panel-root,
+html .filepond--drip,
+html .filepond--drip-blob,
+html .filepond--credits {
+  display: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hover only on the outer shell */
+html .fi-fo-file-upload:hover,
+html .fi-file-upload:hover {
+  border-color: rgb(var(--ng-accent) / 0.5) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(200 210 255 / 0.12),
+    0 0 18px -6px rgb(var(--ng-accent) / 0.35) !important;
+}
+
+/* Modal import: same single shell */
+html .fi-modal .fi-fo-file-upload,
+html .fi-modal .fi-file-upload {
+  border: 1px solid rgb(140 155 230 / 0.28) !important;
+  border-radius: 0.95rem !important;
+  background:
+    linear-gradient(180deg, rgb(180 190 255 / 0.08), transparent 60%),
+    rgb(12 14 36 / 0.45) !important;
+}
+html .fi-modal .filepond--root {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Dashboard / section body text — plain text, NOT input-like buttons
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Info list / description / widget body rows must not look like form fields */
+html .fi-section-content p,
+html .fi-section-content .fi-in-entry,
+html .fi-section-content .fi-in-entry-content,
+html .fi-section-content .fi-in-entry-value,
+html .fi-section-content .fi-in-entry-label,
+html .fi-section-content .fi-in-text,
+html .fi-section-content .fi-in-text-item,
+html .fi-section-content .fi-ta-text,
+html .fi-section-content .fi-ta-text-item,
+html .fi-section-content .fi-wi-widget,
+html .fi-section-content .text-sm,
+html .fi-section-content .text-gray-500,
+html .fi-section-content .text-gray-400,
+html .fi-sc-section-content p,
+html .fi-in-entry:not(:has(input)):not(:has(select)):not(:has(textarea)),
+html .fi-in-entry-content,
+html .fi-in-entry-value,
+html .fi-in-text,
+html .fi-in-text-item,
+html .fi-placeholder,
+html .fi-section-content > div > p,
+html .fi-section-content > div > div:not(.fi-input-wrp):not(.fi-fo-field-wrp):not(.fi-btn):not(.fi-fo-file-upload) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  min-height: 0 !important;
+  padding-block: 0.15rem !important;
+}
+
+/* Keep spacing readable for stacked paragraphs */
+html .fi-section-content p,
+html .fi-sc-section-content p,
+html .fi-in-entry-content,
+html .fi-in-entry-value {
+  color: rgb(var(--ng-text-muted)) !important;
+  line-height: 1.55 !important;
+  font-size: 0.9rem !important;
+}
+
+/* Section body container itself stays glass; only inner text is plain */
+html .fi-section-content,
+html .fi-section-content-ctn,
+html .fi-sc-section-content {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Filament “placeholder” / soft-disabled text rows on dashboard widgets */
+html .fi-section .fi-placeholder,
+html .fi-section [class*="placeholder"] {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Do NOT style generic divs inside sections as inputs */
+html .fi-section-content input:not([type]),
+html .fi-section-content div.fi-input-wrp:not(:has(input)):not(:has(select)):not(:has(textarea)) {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Invite User / permission tabs — wrap cleanly, no broken pill sausage
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* When a tab bar has many items (permissions), use a soft rounded panel, not a mega-pill */
+html .fi-modal .fi-tabs,
+html .fi-modal .fi-fo-tabs,
+html .fi-modal nav.fi-tabs,
+html .fi-modal .fi-tabs.fi-contained,
+html .fi-fo-tabs:has(.fi-tabs-item:nth-child(8)),
+html .fi-tabs:has(.fi-tabs-item:nth-child(8)),
+html .fi-fo-tabs:has(.fi-fo-tabs-item:nth-child(8)) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0.4rem !important;
+  border-radius: 1rem !important; /* not 999px when wrapping */
+  background:
+    linear-gradient(145deg, rgb(180 190 255 / 0.08), rgb(12 14 40 / 0.35)) !important;
+  border: 1px solid rgb(140 155 230 / 0.22) !important;
+  box-shadow: inset 0 1px 0 rgb(200 210 255 / 0.08) !important;
+}
+
+html .fi-modal .fi-tabs-item,
+html .fi-modal .fi-fo-tabs-item,
+html .fi-tabs:has(.fi-tabs-item:nth-child(8)) .fi-tabs-item,
+html .fi-fo-tabs:has(.fi-tabs-item:nth-child(8)) .fi-tabs-item,
+html .fi-fo-tabs:has(.fi-fo-tabs-item:nth-child(8)) .fi-fo-tabs-item {
+  flex: 0 0 auto !important;
+  border-radius: 0.7rem !important;
+  padding: 0.4rem 0.75rem !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+  font-size: 0.8rem !important;
+  line-height: 1.2 !important;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html .fi-modal .fi-tabs-item-active,
+html .fi-modal .fi-fo-tabs-item-active,
+html .fi-modal .fi-tabs-item[aria-selected="true"] {
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.32), rgb(var(--ng-accent-2) / 0.2)) !important;
+  box-shadow: inset 0 1px 0 rgb(var(--ng-accent-soft) / 0.2) !important;
+  color: rgb(var(--ng-text)) !important;
+}
+
+/* Modal sizing for Invite User */
+html .fi-modal-window {
+  max-width: min(52rem, calc(100vw - 1.5rem)) !important;
+}
+html .fi-modal-content {
+  overflow-x: hidden !important;
+}
+
+/* Raw translation keys (missing lang) — soften so they don’t look broken forever */
+html .fi-tabs-item:is([title*="permissions"], [id*="versions"]),
+html .fi-tabs-item {
+  text-transform: none !important;
+}
+
+/* Permission checkbox groups inside modal — clean glass, no double frames */
+html .fi-modal .fi-section,
+html .fi-modal .fi-fieldset {
+  border-radius: 1rem !important;
+}
+html .fi-modal .fi-fo-checkbox-list,
+html .fi-modal .fi-checkbox-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)) !important;
+  gap: 0.55rem 1rem !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4.1.10 — modals must never be trapped
+   backdrop-filter / filter / transform on ANY ancestor of a position:fixed modal
+   makes that ancestor the containing block (the modal then renders inside the
+   table card and is clipped by it). Containers that can hold modal markup
+   therefore get glass fills WITHOUT blur. Blur stays on leaf surfaces only.
+   ═══════════════════════════════════════════════════════════════════════════ */
+html:is(.dark, :root) body .fi-section,
+html:is(.dark, :root) body .fi-sc-section,
+html:is(.dark, :root) body .fi-fieldset,
+html:is(.dark, :root) body .fi-ta-ctn,
+html:is(.dark, :root) body .fi-ta,
+html:is(.dark, :root) body .fi-resource-relation-managers .fi-section,
+html:is(.dark, :root) body .fi-fo-component-ctn > .fi-section,
+html:is(.dark, :root) body .fi-wi-stats-overview-stat,
+html:is(.dark, :root) body .fi-in-entry,
+html:is(.dark, :root) body .fi-fo-repeater-item,
+html:is(.dark, :root) body .fi-accordion-item,
+html:is(.dark, :root) body .fi-collapse,
+html:is(.dark, :root) body .fi-fo-tabs,
+html:is(.dark, :root) body .fi-sc-tabs,
+html:is(.dark, :root) body .fi-resource-tabs,
+html:is(.dark, :root) body .fi-page-sub-navigation-tabs,
+html:is(.dark, :root) body .fi-sticky.fi-form-actions,
+html:is(.dark, :root) body .fi-form-actions.fi-sticky,
+html:is(.dark, :root) body .fi-modal-window {
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  filter: none !important;
+}
+html:is(.dark, :root) body .fi-page-content,
+html:is(.dark, :root) body .fi-page-content > *,
+html:is(.dark, :root) body .fi-main,
+html:is(.dark, :root) body .fi-main-ctn {
+  transform: none !important;
+  filter: none !important;
+  -webkit-backdrop-filter: none !important;
+          backdrop-filter: none !important;
+  will-change: auto !important;
+}
+
+/* The modal window itself no longer blurs (a nested confirm modal would be trapped
+   inside it too), so give it a denser frosted fill to stay readable. */
+html.dark body .fi-modal-window {
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.10), rgb(255 255 255 / 0.03)),
+    rgb(14 16 42 / 0.95) !important;
+}
+html:not(.dark) body .fi-modal-window {
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.9), rgb(245 247 255 / 0.8)),
+    rgb(250 251 255 / 0.96) !important;
+}
+
+/* Permission tabs in modals: always wrap, never show a horizontal scrollbar */
+html .fi-modal .fi-tabs,
+html .fi-modal .fi-sc-tabs > .fi-tabs,
+html .fi-modal nav.fi-tabs {
+  flex-wrap: wrap !important;
+  overflow: visible !important;
+  overflow-x: visible !important;
+  scrollbar-width: none !important;
+}
+html .fi-modal .fi-tabs::-webkit-scrollbar { display: none !important; }
+html .fi-modal .fi-modal-content { overflow-x: hidden !important; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4.1.11 — permission checkbox lists: readable text, proper columns
+   The old rule turned the list wrapper into a grid whose single ~12rem track held
+   Filament's inner grid, squeezing every description into a 100px column.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* 1) Fields that hold a checkbox list: label (Select all) on top, list full width */
+html .fi-fo-field:has(.fi-fo-checkbox-list),
+html .fi-fo-field-wrp:has(.fi-fo-checkbox-list),
+html .fi-fo-field:has(.fi-checkbox-list),
+html .fi-fo-field-wrp:has(.fi-checkbox-list) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.6rem !important;
+}
+html .fi-fo-field:has(.fi-fo-checkbox-list) > *,
+html .fi-fo-field-wrp:has(.fi-fo-checkbox-list) > *,
+html .fi-fo-field:has(.fi-checkbox-list) > *,
+html .fi-fo-field-wrp:has(.fi-checkbox-list) > * {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* 2) Wrapper must not be a grid when Filament's own grid lives inside it */
+html .fi-fo-checkbox-list:has(> .fi-grid),
+html .fi-checkbox-list:has(> .fi-grid) {
+  display: block !important;
+  grid-template-columns: none !important;
+}
+/* 3) The real grid: responsive columns that are wide enough for the descriptions */
+html .fi-fo-checkbox-list > .fi-grid,
+html .fi-checkbox-list > .fi-grid,
+html .fi-fo-checkbox-list:not(:has(> .fi-grid)),
+html .fi-checkbox-list:not(:has(> .fi-grid)) {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr)) !important;
+  gap: 0.9rem 1.6rem !important;
+  width: 100% !important;
+}
+
+/* 4) Each option: checkbox on the left, text flowing normally on the right */
+html .fi-fo-checkbox-list-option,
+html .fi-checkbox-list-option,
+html .fi-fo-checkbox-list label,
+html .fi-checkbox-list label {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.7rem !important;
+  min-width: 0 !important;
+  width: 100%;
+}
+html .fi-fo-checkbox-list-option input[type="checkbox"],
+html .fi-checkbox-list-option input[type="checkbox"],
+html .fi-fo-checkbox-list label input[type="checkbox"] {
+  flex: 0 0 auto !important;
+  margin-top: 0.15rem !important;
+}
+html .fi-fo-checkbox-list-option > :not(input),
+html .fi-checkbox-list-option > :not(input),
+html .fi-fo-checkbox-list label > :not(input) {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+html .fi-fo-checkbox-list [class*="-text"],
+html .fi-fo-checkbox-list [class*="description"],
+html .fi-fo-checkbox-list p {
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  min-width: 0 !important;
+}
+/* typography: bold label, calm muted description */
+html .fi-fo-checkbox-list [class*="label"], html .fi-fo-checkbox-list label > span:first-of-type {
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.3 !important;
+  color: rgb(var(--ng-text)) !important;
+}
+html .fi-fo-checkbox-list p, html .fi-fo-checkbox-list [class*="description"] {
+  margin-top: 0.15rem !important;
+  font-size: 0.78rem !important;
+  line-height: 1.45 !important;
+  color: rgb(var(--ng-text-muted)) !important;
+}
+/* "Select all" / "Deselect all" as a compact accent link */
+html .fi-fo-field:has(.fi-fo-checkbox-list) .fi-fo-field-label-col,
+html .fi-fo-field:has(.fi-fo-checkbox-list) .fi-link {
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+}
+
+
+/* ─── 4.3.0: sign-in welcome text + footer note (Studio settings) ──── */
+.ng-welcome { text-align: center; margin: 0 0 1.1rem; }
+.ng-welcome__title {
+  margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;
+  background: linear-gradient(95deg, rgb(var(--ng-text)) 10%, rgb(var(--ng-accent-soft)) 60%, rgb(var(--ng-accent-2)) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+}
+.ng-welcome__text { margin: 0.4rem 0 0; font-size: 0.88rem; line-height: 1.5; color: rgb(var(--ng-text-muted)); }
+.ng-footer-note { padding: 0.9rem 1rem; text-align: center; font-size: 0.78rem; color: rgb(var(--ng-text-subtle)); }

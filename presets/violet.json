@@ -1,0 +1,32 @@
+{
+  "label": "Violet Glass",
+  "settings": {
+    "enabled": true,
+    "theme_mode": "dark",
+    "lock_mode": false,
+    "panel_colors": true,
+    "accent_hue": "violet",
+    "primary": "#8B5CF6",
+    "secondary": "#A78BFA",
+    "success": "",
+    "warning": "",
+    "danger": "",
+    "info": "",
+    "background_style": "aurora",
+    "surface_style": "glass",
+    "radius": "soft",
+    "glass_intensity": "high",
+    "particles": "low",
+    "dashboard_hero": true,
+    "dashboard_page": true,
+    "dashboard_layout": "grid",
+    "dashboard_status": true,
+    "reduce_motion": false,
+    "console_palette": "catppuccin",
+    "console_glow": true,
+    "console_always_dark": true,
+    "tab_title_suffix": true,
+    "compact_admin": false,
+    "brand_favicon": true
+  }
+}

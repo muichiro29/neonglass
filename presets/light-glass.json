@@ -1,0 +1,32 @@
+{
+  "label": "Light Glass",
+  "settings": {
+    "enabled": true,
+    "theme_mode": "light",
+    "lock_mode": false,
+    "panel_colors": true,
+    "accent_hue": "sky",
+    "primary": "#0EA5E9",
+    "secondary": "",
+    "success": "",
+    "warning": "",
+    "danger": "",
+    "info": "",
+    "background_style": "grid",
+    "surface_style": "glass",
+    "radius": "rounded",
+    "glass_intensity": "medium",
+    "particles": "off",
+    "dashboard_hero": true,
+    "dashboard_page": true,
+    "dashboard_layout": "grid",
+    "dashboard_status": true,
+    "reduce_motion": false,
+    "console_palette": "neonglass",
+    "console_glow": true,
+    "console_always_dark": true,
+    "tab_title_suffix": true,
+    "compact_admin": false,
+    "brand_favicon": true
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "label": "Midnight Solid",
+  "settings": {
+    "enabled": true,
+    "theme_mode": "dark",
+    "lock_mode": false,
+    "panel_colors": true,
+    "accent_hue": "indigo",
+    "primary": "#6366F1",
+    "secondary": "",
+    "success": "",
+    "warning": "",
+    "danger": "",
+    "info": "",
+    "background_style": "plain",
+    "surface_style": "solid",
+    "radius": "sharp",
+    "glass_intensity": "low",
+    "particles": "off",
+    "dashboard_hero": true,
+    "dashboard_page": true,
+    "dashboard_layout": "list",
+    "dashboard_status": true,
+    "reduce_motion": true,
+    "console_palette": "midnight",
+    "console_glow": false,
+    "console_always_dark": true,
+    "tab_title_suffix": false,
+    "compact_admin": true,
+    "brand_favicon": true
+  }
+}
