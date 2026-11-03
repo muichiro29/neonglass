@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   NEONGLASS — Liquid-glass theme for Pelican Panel  ·  v4.1.9
-   Based on Aether by Muichiro Dev (MIT)
+   NEONGLASS — Liquid-glass theme for Pelican Panel  ·  v1.0.1
+   NeonGlass by Muichiro Dev (MIT)
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @font-face {
@@ -3258,7 +3258,8 @@ html.dark body {
 
 /* Atmosphere layer stronger */
 #ng-bg {
-  z-index: 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
   background: transparent !important;
 }
 .fi-layout, .fi-body, .fi-main, .fi-main-ctn, .fi-page,
@@ -4166,3 +4167,303 @@ html .fi-fo-field:has(.fi-fo-checkbox-list) .fi-link {
 }
 .ng-welcome__text { margin: 0.4rem 0 0; font-size: 0.88rem; line-height: 1.5; color: rgb(var(--ng-text-muted)); }
 .ng-footer-note { padding: 0.9rem 1rem; text-align: center; font-size: 0.78rem; color: rgb(var(--ng-text-subtle)); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — full surface repair (never inherit dark navy wells)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+html:not(.dark),
+html:not(.dark) body,
+[data-theme="light"] {
+  color-scheme: light !important;
+  --ng-bg: 236 240 252 !important;
+  --ng-bg-elevated: 255 255 255 !important;
+  --ng-surface: 255 255 255 !important;
+  --ng-surface-2: 244 247 255 !important;
+  --ng-surface-3: 230 236 255 !important;
+  --ng-text: 15 23 42 !important;
+  --ng-text-muted: 71 85 105 !important;
+  --ng-text-subtle: 100 116 139 !important;
+  --ng-border: 148 163 220 !important;
+  --ng-border-opacity: 0.35 !important;
+  --gray-950: 15 23 42;
+  --gray-900: 30 41 59;
+  --gray-800: 51 65 85;
+  --gray-700: 71 85 105;
+  --gray-600: 100 116 139;
+  --color-gray-950: 15 23 42;
+  --color-gray-900: 30 41 59;
+  --color-gray-800: 51 65 85;
+  --lg-base: rgb(255 255 255 / 0.82) !important;
+  --lg-fill-a: rgb(255 255 255 / 0.55) !important;
+  --lg-fill-b: rgb(226 232 255 / 0.35) !important;
+  --lg-stroke: rgb(100 120 200 / 0.22) !important;
+  --lg-spec: rgb(255 255 255 / 0.85) !important;
+  --lg-shadow: 0 10px 28px -12px rgb(60 80 160 / 0.22) !important;
+}
+
+html:not(.dark),
+html:not(.dark) body {
+  background-color: rgb(236 240 252) !important;
+  background-image:
+    radial-gradient(ellipse 90% 60% at 15% -10%, rgb(var(--ng-accent) / 0.14), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 90% 110%, rgb(var(--ng-accent-2) / 0.12), transparent 50%),
+    linear-gradient(180deg, rgb(242 245 255), rgb(228 234 252)) !important;
+  background-attachment: fixed !important;
+  color: rgb(15 23 42) !important;
+}
+
+html:not(.dark) #ng-bg {
+  z-index: -1 !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+/* Glass surfaces — light */
+html:not(.dark) .fi-section,
+html:not(.dark) .fi-simple-card,
+html:not(.dark) .fi-ta-ctn,
+html:not(.dark) .fi-wi-stats-overview-stat,
+html:not(.dark) .fi-modal-window,
+html:not(.dark) .fi-fieldset,
+html:not(.dark) .fi-resource-relation-managers,
+html:not(.dark) .fi-ta {
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.75), rgb(236 240 255 / 0.55)),
+    rgb(255 255 255 / 0.78) !important;
+  border-color: rgb(100 120 200 / 0.22) !important;
+  color: rgb(15 23 42) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 8px 24px -12px rgb(60 80 160 / 0.18) !important;
+}
+
+html:not(.dark) .fi-section-header,
+html:not(.dark) .fi-sc-section-header {
+  background: rgb(255 255 255 / 0.45) !important;
+  border-bottom-color: rgb(100 120 200 / 0.18) !important;
+  color: rgb(15 23 42) !important;
+}
+
+html:not(.dark) .fi-section-content,
+html:not(.dark) .fi-section-content-ctn,
+html:not(.dark) .fi-sc-section-content,
+html:not(.dark) .fi-fieldset-content {
+  background: transparent !important;
+  color: rgb(51 65 85) !important;
+}
+
+/* Inputs — light wells */
+html:not(.dark) .fi-input-wrp,
+html:not(.dark) .fi-select-input,
+html:not(.dark) .fi-ta-search-field,
+html:not(.dark) .fi-fo-field-wrp .fi-input-wrp,
+html:not(.dark) .fi-fo-field-wrp input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) .fi-fo-field-wrp select,
+html:not(.dark) .fi-fo-field-wrp textarea,
+html:not(.dark) .fi-input,
+html:not(.dark) input.fi-input,
+html:not(.dark) textarea.fi-textarea,
+html:not(.dark) select.fi-select-input,
+html:not(.dark) input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) textarea,
+html:not(.dark) select {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.95), rgb(244 247 255 / 0.9)) !important;
+  border-color: rgb(100 120 200 / 0.28) !important;
+  color: rgb(15 23 42) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    0 1px 2px rgb(60 80 160 / 0.06) !important;
+}
+
+html:not(.dark) .fi-input-wrp:focus-within,
+html:not(.dark) .fi-select-input:focus-within,
+html:not(.dark) .fi-input:focus,
+html:not(.dark) input:focus,
+html:not(.dark) textarea:focus,
+html:not(.dark) select:focus {
+  border-color: rgb(var(--ng-accent) / 0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    0 0 0 3px rgb(var(--ng-accent) / 0.18) !important;
+}
+
+html:not(.dark) .fi-input::placeholder,
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: rgb(100 116 139) !important;
+  opacity: 0.85 !important;
+}
+
+/* Sidebar / topbar light */
+html:not(.dark) .fi-sidebar,
+html:not(.dark) .fi-topbar {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.92), rgb(240 244 255 / 0.88)) !important;
+  border-color: rgb(100 120 200 / 0.2) !important;
+  color: rgb(15 23 42) !important;
+}
+
+html:not(.dark) .fi-sidebar-nav-item,
+html:not(.dark) .fi-sidebar-item,
+html:not(.dark) .fi-topbar * {
+  color: rgb(30 41 59) !important;
+}
+
+html:not(.dark) .fi-sidebar-nav-item-active,
+html:not(.dark) .fi-sidebar-item-active {
+  color: rgb(var(--ng-accent-strong)) !important;
+  background: rgb(var(--ng-accent) / 0.12) !important;
+}
+
+/* Tables */
+html:not(.dark) .fi-ta-table,
+html:not(.dark) .fi-ta-header-cell,
+html:not(.dark) .fi-ta-cell {
+  color: rgb(15 23 42) !important;
+  border-color: rgb(100 120 200 / 0.15) !important;
+}
+html:not(.dark) .fi-ta-header-ctn,
+html:not(.dark) thead {
+  background: rgb(244 247 255 / 0.85) !important;
+}
+html:not(.dark) .fi-ta-row:hover,
+html:not(.dark) tbody tr:hover {
+  background: rgb(var(--ng-accent) / 0.06) !important;
+}
+
+/* Dropdowns / selects already partially covered — reinforce */
+html:not(.dark) .fi-dropdown-panel,
+html:not(.dark) .fi-select-input-list,
+html:not(.dark) .fi-user-menu .fi-dropdown-panel,
+html:not(.dark) [x-float] .fi-dropdown-panel {
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.92), rgb(244 247 255 / 0.95)),
+    rgb(255 255 255 / 0.96) !important;
+  border-color: rgb(100 120 200 / 0.25) !important;
+  color: rgb(15 23 42) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 14px 40px -12px rgb(60 80 160 / 0.28) !important;
+}
+
+html:not(.dark) .fi-dropdown-list-item,
+html:not(.dark) .fi-select-input-option {
+  color: rgb(30 41 59) !important;
+}
+html:not(.dark) .fi-dropdown-list-item:hover,
+html:not(.dark) .fi-select-input-option:hover {
+  background: rgb(var(--ng-accent) / 0.1) !important;
+}
+
+/* Tabs / pills */
+html:not(.dark) .fi-tabs,
+html:not(.dark) .fi-fo-tabs,
+html:not(.dark) .fi-tabs.fi-contained {
+  background: rgb(255 255 255 / 0.7) !important;
+  border-color: rgb(100 120 200 / 0.22) !important;
+}
+html:not(.dark) .fi-tabs-item,
+html:not(.dark) .fi-fo-tabs-item {
+  color: rgb(51 65 85) !important;
+}
+html:not(.dark) .fi-tabs-item-active,
+html:not(.dark) .fi-fo-tabs-item-active,
+html:not(.dark) .fi-tabs-item[aria-selected="true"] {
+  color: rgb(15 23 42) !important;
+  background: linear-gradient(135deg, rgb(var(--ng-accent) / 0.22), rgb(var(--ng-accent-2) / 0.14)) !important;
+}
+
+/* Modals */
+html:not(.dark) .fi-modal-window {
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.95), rgb(240 244 255 / 0.92)),
+    rgb(255 255 255 / 0.95) !important;
+  color: rgb(15 23 42) !important;
+  border-color: rgb(100 120 200 / 0.25) !important;
+}
+html:not(.dark) .fi-modal-header,
+html:not(.dark) .fi-modal-footer {
+  background: rgb(255 255 255 / 0.75) !important;
+  border-color: rgb(100 120 200 / 0.18) !important;
+  color: rgb(15 23 42) !important;
+}
+
+/* File upload / avatar */
+html:not(.dark) .fi-fo-file-upload,
+html:not(.dark) .fi-file-upload,
+html:not(.dark) .filepond--root {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.9), rgb(236 240 255 / 0.8)) !important;
+  border-color: rgb(100 120 200 / 0.28) !important;
+  color: rgb(51 65 85) !important;
+}
+
+/* Code / pre */
+html:not(.dark) pre,
+html:not(.dark) code,
+html:not(.dark) .fi-code {
+  background: rgb(236 240 252 / 0.9) !important;
+  color: rgb(30 41 59) !important;
+  border-color: rgb(100 120 200 / 0.2) !important;
+}
+
+/* Dashboard cards / custom ng surfaces */
+html:not(.dark) .ng-srv,
+html:not(.dark) .ng-hero,
+html:not(.dark) .ng-status,
+html:not(.dark) .ng-pill {
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 0.85), rgb(236 240 255 / 0.65)),
+    rgb(255 255 255 / 0.75) !important;
+  border-color: rgb(100 120 200 / 0.22) !important;
+  color: rgb(15 23 42) !important;
+}
+html:not(.dark) .ng-srv__name,
+html:not(.dark) .ng-hero__title,
+html:not(.dark) .ng-hero__sub {
+  color: rgb(15 23 42) !important;
+}
+html:not(.dark) .ng-srv__addr {
+  background: rgb(255 255 255 / 0.7) !important;
+  color: rgb(51 65 85) !important;
+}
+
+/* Toggle / checkbox labels readable */
+html:not(.dark) .fi-fo-toggle label,
+html:not(.dark) .fi-fo-checkbox label,
+html:not(.dark) .fi-fo-field-wrp-label,
+html:not(.dark) label {
+  color: rgb(30 41 59) !important;
+}
+
+/* Atmosphere softer in light */
+html:not(.dark) .ng-aurora { opacity: 0.4 !important; }
+html:not(.dark) .ng-orb { opacity: 0.45 !important; }
+html:not(.dark) .ng-particles { opacity: 0.12 !important; filter: invert(1); }
+
+/* Empty states / placeholders */
+html:not(.dark) .fi-section-content p,
+html:not(.dark) .fi-in-entry-content,
+html:not(.dark) .fi-in-entry-value {
+  color: rgb(71 85 105) !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Buttons stay vivid but text readable on light */
+html:not(.dark) .fi-btn:not(.fi-btn-primary):not(.fi-btn-danger):not(.fi-btn-success) {
+  background: rgb(255 255 255 / 0.75) !important;
+  color: rgb(30 41 59) !important;
+  border-color: rgb(100 120 200 / 0.28) !important;
+}
+
+/* Notifications */
+html:not(.dark) .fi-no-notification,
+html:not(.dark) .fi-notifications {
+  background: rgb(255 255 255 / 0.95) !important;
+  color: rgb(15 23 42) !important;
+  border-color: rgb(100 120 200 / 0.22) !important;
+}

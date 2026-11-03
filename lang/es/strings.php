@@ -104,6 +104,7 @@ return [
     'tab_title_suffix' => '🏷️ Añadir " · NeonGlass" al título de la pestaña',
     'tab_title_suffix_help' => 'Facilita identificar las pestañas del navegador cuando hay varios paneles abiertos.',
 
+    // ─── v3.4 ───────────────────────────────────────────────────────────────
     'section_dashboard' => '📊 Dashboard',
     'section_dashboard_help' => 'La página de inicio con la lista de servidores: banner, resumen de estado y diseño de tarjetas.',
     'dashboard_hero' => '🖼️ Mostrar banner principal',
@@ -148,6 +149,8 @@ return [
     'js_compact' => 'Compacto',
     'js_search_hint' => 'Buscar',
     'js_dashboard' => 'Dashboard',
+
+    // Dashboard page (3.5.0)
     'dashboard_page' => '🏠 Usar la página de dashboard de NeonGlass',
     'dashboard_page_help' => 'Reemplaza la lista de servidores por una página propia de NeonGlass (estado en vivo, CPU/RAM, botones de energía). Añade ?neonglass_legacy=1 a la URL de la lista para ver la lista original de Pelican.',
     'dash_search' => 'Buscar servidores',
@@ -204,6 +207,8 @@ return [
     'status_version' => 'Versión',
     'status_servers' => 'Servidores',
     'status_php' => 'Runtime',
+
+    // ── Studio settings (4.3.0) ──
     'st_auto' => 'Auto',
     'st_group_day' => '☀️ Colores de día',
     'st_group_day_help' => 'Colores de superficie y texto en modo claro. Vacío = el del tema.',

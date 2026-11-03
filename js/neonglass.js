@@ -1,6 +1,6 @@
 /**
  * NeonGlass — client-side enhancements for Pelican Panel
- * Author: Muichiro Dev · v4.1.9
+ * Author: Muichiro Dev · v1.0.1
  *
  * Design rule: nothing in here may ever throw into the page. Every entry point
  * is wrapped in safe(), every DOM lookup tolerates missing nodes, and all
