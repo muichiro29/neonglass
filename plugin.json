@@ -9,10 +9,12 @@
     "namespace": "MuichiroDev\\NeonGlass",
     "class": "NeonGlassPlugin",
     "api_version": 1,
+    "update_url": "https://hub.pelican.dev/plugins/neonglass/update.json",
     "panels": [
         "admin",
         "app",
         "server"
     ]
 }
+
 
