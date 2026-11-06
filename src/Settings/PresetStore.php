@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace MuichiroDev\NeonGlass\Settings;
 
+use Illuminate\Support\Facades\Storage;
 use MuichiroDev\NeonGlass\NeonGlassPlugin;
 
 /**
  * Built-in presets ship as JSON under presets/.
- * User-saved presets live in storage/app/neonglass/presets.json.
+ * User-saved presets live on the local storage disk at neonglass/presets.json
+ * (written only via Laravel Storage — Laravel Storage API only).
  */
 final class PresetStore
 {
+    private const DISK = 'local';
+
+    private const CUSTOM_PATH = 'neonglass/presets.json';
+
     public static function storagePath(): string
     {
-        return storage_path('app/neonglass/presets.json');
+        return Storage::disk(self::DISK)->path(self::CUSTOM_PATH);
     }
 
     public static function builtInDirectory(): string
@@ -44,7 +50,6 @@ final class PresetStore
         }
 
         foreach (self::custom() as $id => $preset) {
-            // custom may override a same-id built-in if the admin wants
             $out[$id] = $preset;
         }
 
@@ -85,18 +90,8 @@ final class PresetStore
      */
     public static function custom(): array
     {
-        $path = self::storagePath();
-        if (! is_file($path)) {
-            return [];
-        }
-
-        try {
-            $raw = json_decode((string) file_get_contents($path), true, 32, JSON_THROW_ON_ERROR);
-        } catch (\Throwable) {
-            return [];
-        }
-
-        if (! is_array($raw)) {
+        $raw = self::readCustomFile();
+        if ($raw === []) {
             return [];
         }
 
@@ -164,8 +159,6 @@ final class PresetStore
             throw new \InvalidArgumentException('Invalid preset name.');
         }
 
-        // Do not allow overwriting built-in ids with the same slug via the UI
-        // — use a distinct custom id instead.
         if (isset(self::builtIn()[$id])) {
             $id = 'custom-' . $id;
         }
@@ -240,12 +233,13 @@ final class PresetStore
      */
     protected static function readCustomFile(): array
     {
-        $path = self::storagePath();
-        if (! is_file($path)) {
+        $disk = Storage::disk(self::DISK);
+        if (! $disk->exists(self::CUSTOM_PATH)) {
             return [];
         }
+
         try {
-            $raw = json_decode((string) file_get_contents($path), true, 32, JSON_THROW_ON_ERROR);
+            $raw = json_decode((string) $disk->get(self::CUSTOM_PATH), true, 32, JSON_THROW_ON_ERROR);
         } catch (\Throwable) {
             return [];
         }
@@ -258,21 +252,19 @@ final class PresetStore
      */
     protected static function writeCustomFile(array $data): void
     {
-        $path = self::storagePath();
-        $dir = dirname($path);
-        if (! is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         if ($json === false) {
             throw new \RuntimeException('Failed to encode presets.');
         }
 
-        $tmp = $path . '.tmp';
-        if (file_put_contents($tmp, $json . "\n", LOCK_EX) === false) {
+        $disk = Storage::disk(self::DISK);
+
+        if (! $disk->exists('neonglass')) {
+            $disk->makeDirectory('neonglass');
+        }
+
+        if (! $disk->put(self::CUSTOM_PATH, $json . "\n")) {
             throw new \RuntimeException('Failed to write presets.');
         }
-        rename($tmp, $path);
     }
 }
