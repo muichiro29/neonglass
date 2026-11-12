@@ -2,7 +2,7 @@
     "id": "neonglass",
     "name": "NeonGlass",
     "author": "Muichiro Dev",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "NeonGlass is a modern liquid-glass theme for Pelican Panel: frosted, refractive glass surfaces with specular highlights, neon accent glows and floating colour orbs across the admin, app and server panels.\n\nThe server list becomes a custom dashboard: glass hero banner with live status chips, grid / list / compact layouts, glass server cards with CPU / RAM meters, status glow, pins and a \"/\" search shortcut, plus a floating glass tab bar on phones. Also: dark and light modes, 11 neon accent hues, corner radius and glass intensity settings, curated console palettes and a full settings page. Settings are stored in .env. Self-contained assets, EN / ES / FR / PT-BR / DE, respects prefers-reduced-motion and reduced-transparency. MIT licensed.",
     "category": "theme",
     "license": "MIT",

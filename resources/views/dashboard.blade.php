@@ -33,6 +33,7 @@
         'user' => '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
         'shield' => '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
         'logout' => '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+        'search' => '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5"/>',
     ];
 @endphp
 
@@ -151,7 +152,10 @@
     @endif
 
     <div class="ng-bar">
-        <input type="search" x-ref="search" x-model="q" class="ng-bar__search" placeholder="{{ $t('dash_search') }}" aria-label="{{ $t('dash_search') }}">
+        <label class="ng-search" aria-label="{{ $t('dash_search') }}">
+            {!! $svg($ico['search'], 17) !!}
+            <input type="search" x-ref="search" x-model="q" class="ng-search__input" placeholder="{{ $t('dash_search') }}" aria-label="{{ $t('dash_search') }}">
+        </label>
         <select class="ng-bar__select" x-model="sort" @change="setSort($event.target.value)" aria-label="{{ $t('dash_sort') }}">
             <option value="name">{{ $t('dash_sort_name') }}</option>
             <option value="status">{{ $t('dash_sort_status') }}</option>
