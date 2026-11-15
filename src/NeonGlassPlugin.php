@@ -3,8 +3,8 @@
 namespace MuichiroDev\NeonGlass;
 
 use App\Contracts\Plugins\HasPluginSettings;
+use App\Contracts\Plugins\HasTheme;
 use App\Traits\EnvironmentWriterTrait;
-use Filament\Contracts\Plugin;
 use Filament\Enums\ThemeMode;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
@@ -25,7 +25,7 @@ use MuichiroDev\NeonGlass\Settings\StudioForm;
 use MuichiroDev\NeonGlass\Settings\PresetStore;
 use Filament\View\PanelsRenderHook;
 
-class NeonGlassPlugin implements Plugin, HasPluginSettings
+class NeonGlassPlugin implements HasPluginSettings, HasTheme
 {
     use EnvironmentWriterTrait;
 
@@ -248,6 +248,77 @@ class NeonGlassPlugin implements Plugin, HasPluginSettings
         return 'neonglass';
     }
 
+    /**
+     * @return array<string, array<int|string, string|int>|string>
+     */
+    public function getThemeColors(): array
+    {
+        $settings = $this->settings();
+
+        if (! ($settings['enabled'] ?? true) || ! ($settings['panel_colors'] ?? true)) {
+            return [];
+        }
+
+        return [
+            'primary' => $this->resolveColor($settings['primary'] ?? '', match ($settings['accent_hue']) {
+                'violet' => Color::Violet,
+                'rose' => Color::Rose,
+                'teal' => Color::Teal,
+                'amber' => Color::Amber,
+                'emerald' => Color::Emerald,
+                'indigo' => Color::Indigo,
+                'sky' => Color::Sky,
+                'fuchsia' => Color::Fuchsia,
+                'orange' => Color::Orange,
+                'white' => Color::Zinc,
+                default => Color::Cyan,
+            }),
+            'gray' => Color::Slate,
+            'danger' => $this->resolveColor($settings['danger'] ?? '', Color::Rose),
+            'success' => $this->resolveColor($settings['success'] ?? '', Color::Emerald),
+            'warning' => $this->resolveColor($settings['warning'] ?? '', Color::Amber),
+            'info' => $this->resolveColor($settings['info'] ?? '', Color::Sky),
+            'secondary' => $this->resolveColor($settings['secondary'] ?? '', Color::Cyan),
+        ];
+    }
+
+    public function getThemeFont(): ?string
+    {
+        return null;
+    }
+
+    public function getThemeViteEntry(): string|array|null
+    {
+        return null;
+    }
+
+    /**
+     * @return array<string, \Closure>
+     */
+    public function getThemeRenderHooks(): array
+    {
+        $settings = $this->settings();
+
+        if (! ($settings['enabled'] ?? true)) {
+            return [];
+        }
+
+        $hooks = [
+            'panels::head.end' => fn (): string => $this->renderHead(),
+            'panels::body.start' => fn (): string => $this->renderBody(),
+        ];
+
+        if (($settings['welcome_title'] ?? '') !== '' || ($settings['welcome_text'] ?? '') !== '') {
+            $hooks[PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE] = fn (): string => $this->renderWelcome();
+        }
+
+        if (($settings['footer_note'] ?? '') !== '') {
+            $hooks[PanelsRenderHook::FOOTER] = fn (): string => $this->renderFooterNote();
+        }
+
+        return $hooks;
+    }
+
     public function register(Panel $panel): void
     {
         // A theme must never be able to take the panel down: every step below
@@ -273,42 +344,12 @@ class NeonGlassPlugin implements Plugin, HasPluginSettings
                 $panel->darkMode(true)->themeSwitcher(true);
             }
 
-            $panel
-                ->renderHook('panels::head.end', fn () => $this->renderHead())
-                ->renderHook('panels::body.start', fn () => $this->renderBody());
-
             // Real Filament dashboard instead of decorating the server-list table from JS.
             if ($settings['dashboard_page'] && $panel->getId() === 'app') {
                 $panel
                     ->pages([ServerDashboard::class])
                     ->middleware([DashboardHome::class])
                     ->homeUrl(fn () => ServerDashboard::getUrl(panel: 'app'));
-            }
-
-            if ($settings['panel_colors']) {
-                $primary = $this->resolveColor($settings['primary'] ?? '', match ($settings['accent_hue']) {
-                    'violet' => Color::Violet,
-                    'rose' => Color::Rose,
-                    'teal' => Color::Teal,
-                    'amber' => Color::Amber,
-                    'emerald' => Color::Emerald,
-                    'indigo' => Color::Indigo,
-                    'sky' => Color::Sky,
-                    'fuchsia' => Color::Fuchsia,
-                    'orange' => Color::Orange,
-                    'white' => Color::Zinc,
-                    default => Color::Cyan,
-                });
-
-                $panel->colors([
-                    'primary' => $primary,
-                    'gray' => Color::Slate,
-                    'danger' => $this->resolveColor($settings['danger'] ?? '', Color::Rose),
-                    'success' => $this->resolveColor($settings['success'] ?? '', Color::Emerald),
-                    'warning' => $this->resolveColor($settings['warning'] ?? '', Color::Amber),
-                    'info' => $this->resolveColor($settings['info'] ?? '', Color::Sky),
-                    'secondary' => $this->resolveColor($settings['secondary'] ?? '', Color::Cyan),
-                ]);
             }
 
             $this->applyStudio($panel, $settings);
@@ -355,14 +396,6 @@ class NeonGlassPlugin implements Plugin, HasPluginSettings
 
             if (is_int($s['logo_height'] ?? null)) {
                 $panel->brandLogoHeight($s['logo_height'] . 'px');
-            }
-
-            if (($s['welcome_title'] ?? '') !== '' || ($s['welcome_text'] ?? '') !== '') {
-                $panel->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE, fn () => $this->renderWelcome());
-            }
-
-            if (($s['footer_note'] ?? '') !== '') {
-                $panel->renderHook(PanelsRenderHook::FOOTER, fn () => $this->renderFooterNote());
             }
         } catch (\Throwable $e) {
             $this->warn('studio settings failed', $e);

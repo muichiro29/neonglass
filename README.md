@@ -68,6 +68,7 @@ The panel locale is used automatically. Contributions for additional languages a
 ## Compatibility
 
 - Requires a recent Pelican Panel that supports the plugin system (category `theme`).
+- Implements `HasTheme`, so NeonGlass appears in the theme switcher; its CSS, JS, render hooks and colors are applied only while NeonGlass is active.
 - Designed for the three standard Filament panels: `admin`, `app`, `server`.
 - Works alongside other theme plugins when “Apply NeonGlass component colours” is turned off.
 
