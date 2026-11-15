@@ -218,7 +218,7 @@ final class StudioCss
         $r = [];
 
         if (($corner = self::n($s, 'control_corner')) !== null) {
-            $controls = ['.fi-input-wrp', '.fi-select-input', '.fi-ta-search-field', '.fi-fo-field-wrp input', '.fi-fo-field-wrp select', '.fi-fo-field-wrp textarea', '.fi-btn', '.fi-btn-group .fi-btn', '.ng-bar__search', '.ng-bar__select'];
+            $controls = ['.fi-input-wrp', '.fi-select-input', '.fi-ta-search-field', '.fi-fo-field-wrp input', '.fi-fo-field-wrp select', '.fi-fo-field-wrp textarea', '.fi-btn', '.fi-btn-group .fi-btn', '.ng-search', '.ng-bar__select'];
             $r[] = self::scope($controls) . '{border-radius:' . $corner . 'px !important}';
         }
 

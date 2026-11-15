@@ -589,7 +589,11 @@
     ensureHero();
     ensureParticles();
     ensureSuffix();
+    fixDatePickerGrid();
   });
+
+  // DateTimePicker: layout lo maneja Filament (v1.0.8); sin ajustes por JS.
+  const fixDatePickerGrid = function () {};
 
   let queued = false;
   const schedule = () => {
